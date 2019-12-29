@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.PostMapper">
+    <select id="selectPosts" resultType="com.example.vo.PostVo">
+        select p.*
+        , c.id as categoryId, c.name as categoryName
+        , u.id as authorId, u.username as authorName, u.avatar as authorAvatar, u.vip_level as authorVip
+        from post p
+        left join user u on p.user_id = u.id
+        left join category c on p.category_id = c.id
+
+        ${ew.customSqlSegment}
+
+    </select>
+</mapper>
