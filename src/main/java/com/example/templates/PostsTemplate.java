@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ * 自定义freemark标签
+ * 继承templateDirective类，重写execute方法
  * @author cenkang
  * @date 2019/12/29 - 11:25
  */
@@ -22,6 +24,11 @@ public class PostsTemplate extends TemplateDirective {
         return "posts";
     }
 
+    /**
+     *
+     * @param handler
+     * @throws Exception
+     */
     @Override
     public void execute(DirectiveHandler handler) throws Exception {
         Long categoryId = handler.getLong("categoryId",0);

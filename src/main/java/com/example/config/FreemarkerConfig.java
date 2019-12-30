@@ -21,7 +21,6 @@ public class FreemarkerConfig {
 
     @PostConstruct
     public void setUp(){
-        configuration.setSharedVariable("posts",
-                applicationContext.getBean(PostsTemplate.class));
+        configuration.setSharedVariable("posts", applicationContext.getBean(PostsTemplate.class));
     }
 }

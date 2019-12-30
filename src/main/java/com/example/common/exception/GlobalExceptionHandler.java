@@ -27,6 +27,7 @@ public class GlobalExceptionHandler {
 
         if (e instanceof MyException){
             // ....
+            System.out.println("=======================================================");
         }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("exception",e);
