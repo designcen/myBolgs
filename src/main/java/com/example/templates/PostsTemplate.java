@@ -31,7 +31,7 @@ public class PostsTemplate extends TemplateDirective {
      */
     @Override
     public void execute(DirectiveHandler handler) throws Exception {
-        Long categoryId = handler.getLong("categoryId",0);
+        Long categoryId = handler.getLong("categoryId",1);
         int pn = handler.getInteger("pn",1);
         int size = handler.getInteger("size",10);
         String order = handler.getString("order","create");

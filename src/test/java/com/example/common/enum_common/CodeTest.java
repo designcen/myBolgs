@@ -7,8 +7,9 @@ package com.example.common.enum_common;
 public class CodeTest {
 
     public static void main (String[] args){
-        String message = Code.ZERO.getMessage();
-        Integer code = Code.ZERO.getCode();
-        System.out.println(message+"     "+code);
+        String s = "（";
+        String ss = "(";
+        System.out.println(s.length());
+        System.out.println(ss.length());
     }
 }

@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 
 /**
  * @author cenkang
- * @date 2019/12/29 - 13:31
+ * @Date 2019/12/29 - 13:31
  */
 @Configuration
 public class FreemarkerConfig {
