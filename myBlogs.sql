@@ -12,7 +12,7 @@ File Encoding         : 65001
 
 Date: 2019-09-10 18:51:44
 */
-use third_homework;
+use my_blogs;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
