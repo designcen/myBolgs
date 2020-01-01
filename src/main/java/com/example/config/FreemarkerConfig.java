@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.templates.HotsTemplate;
 import com.example.templates.PostsTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -21,6 +22,7 @@ public class FreemarkerConfig {
 
     @PostConstruct
     public void setUp(){
+        configuration.setSharedVariable("hots",applicationContext.getBean(HotsTemplate.class));
         configuration.setSharedVariable("posts", applicationContext.getBean(PostsTemplate.class));
     }
 }

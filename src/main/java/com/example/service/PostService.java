@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface PostService extends IService<Post> {
     /**
-     * 初始化首页的周评论排行榜
+     * 初始化首页的周评论排行榜 启动时候将数据存入reids
      */
     public  void initIndexWeekRank();
 

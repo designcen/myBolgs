@@ -34,7 +34,7 @@ public class PostsTemplate extends TemplateDirective {
         Long categoryId = handler.getLong("categoryId",1);
         int pn = handler.getInteger("pn",1);
         int size = handler.getInteger("size",10);
-        String order = handler.getString("order","create");
+        String order = handler.getString("order","created");
 
         Page page = new Page(pn,size);
         IPage results = postService.paging(page,categoryId,order);
