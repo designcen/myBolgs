@@ -20,4 +20,5 @@ import org.apache.ibatis.annotations.Param;
 public interface PostMapper extends BaseMapper<Post> {
 
     IPage<PostVo> selectPosts(Page page, @Param(Constants.WRAPPER) QueryWrapper<Post> wrapper);
+    PostVo selectOne(@Param(Constants.WRAPPER) QueryWrapper<Post> wrapper);
 }

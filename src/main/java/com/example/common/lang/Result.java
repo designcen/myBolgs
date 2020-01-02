@@ -16,7 +16,7 @@ public class Result implements Serializable{
     private String msg;
     // 结果数据
     private Object data;
-
+    private String action;
     public static Result succ(Object data){
         Result result = new Result();
         result.setCode(Code.ZERO);
@@ -30,6 +30,14 @@ public class Result implements Serializable{
         result.setCode(Code.ZERO);
         result.setData(data);
         result.setMsg(mess);
+        return result;
+    }
+    public static Result succ(String mess,Object data,String action){
+        Result result = new Result();
+        result.setCode(Code.ZERO);
+        result.setData(data);
+        result.setMsg(mess);
+        result.setAction(action);
         return result;
     }
 
@@ -71,5 +79,13 @@ public class Result implements Serializable{
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 }

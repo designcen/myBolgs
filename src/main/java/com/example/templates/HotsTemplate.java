@@ -35,7 +35,7 @@ public class HotsTemplate extends TemplateDirective {
         for (ZSetOperations.TypedTuple typedTuple : lastWeekRank) {
           Map<String,Object> map = new HashMap<>();
           map.put("comment_count",typedTuple.getScore());
-          map.put("id",redisUtils.hget("rank_post_"+typedTuple.getValue(),"post:title"));
+          map.put("id",redisUtils.hget("rank_post_"+typedTuple.getValue(),"post:id"));
           map.put("title",redisUtils.hget("rank_post_"+typedTuple.getValue(),"post:title"));
           hotPosts.add(map);
         }

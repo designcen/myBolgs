@@ -65,16 +65,25 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     }
 
     @Override
-    @Cacheable(cacheNames = "cache_post",key = "'page_'+#page.current" +
-            "+'_'+#page.size+'_query_'+#categoryId+'_'+#order")
-    public IPage paging(Page page, Long categoryId, String order) {
+    @Cacheable(cacheNames = "cache_post", key = "'page_' + #page.current + '_' + #page.size " +
+            "+ '_query_' +#userId  + '_' + #categoryId + '_' + #level  + '_' + #recommend  + '_' + #order")
+    public IPage paging(Page page, Long userId, Long categoryId, Integer level, Boolean recommend, String order) {
+        if (level == null) level = -1;
         QueryWrapper wrapper = new QueryWrapper<Post>()
-                .eq(categoryId != 0,"category_id",categoryId)
+                .eq(userId != null, "user_id", userId)
+                .eq(categoryId != null && categoryId != 0, "category_id", categoryId)
+                .ge(level >= 0,"level",0)
+                .eq(recommend != null, "recommend", recommend)
                 .orderByDesc(order);
 
         IPage<PostVo> pageDate = postMapper.selectPosts(page,wrapper);
 
         return pageDate;
+    }
+
+    @Override
+    public PostVo selectOne(QueryWrapper wrapper) {
+        return postMapper.selectOne(wrapper);
     }
 
     /**

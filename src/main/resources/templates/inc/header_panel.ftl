@@ -1,13 +1,14 @@
 <div class="fly-panel fly-column">
     <div class="layui-container">
         <ul class="layui-clear">
-            <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
-            <li><a href="jie/index.html">提问</a></li>
-            <li><a href="jie/index.html">分享<span class="layui-badge-dot"></span></a></li>
-            <li><a href="jie/index.html">讨论</a></li>
-            <li><a href="jie/index.html">建议</a></li>
-            <li><a href="jie/index.html">公告</a></li>
-            <li><a href="jie/index.html">动态</a></li>
+            <li class="${(0 == currentCategoryId)?string('layui-hide-xs layui-this', '')}">
+                <a href="/">首页</a>
+            </li>
+            <#list categorys as category>
+                <li class="${(category.id == currentCategoryId)?string('layui-hide-xs layui-this', '')}">
+                    <a href="${base}/category/${category.id}">${category.name}</a>
+                </li>
+            </#list>
             <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
 
             <!-- 用户登入后显示 -->

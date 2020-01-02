@@ -1,10 +1,12 @@
 package com.example.service;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.entity.Post;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.vo.PostVo;
 
 /**
  * <p>
@@ -20,5 +22,7 @@ public interface PostService extends IService<Post> {
      */
     public  void initIndexWeekRank();
 
-    IPage paging(Page page, Long categoryId, String order);
+    IPage paging(Page page,Long userId, Long categoryId,Integer level, Boolean recommend, String order);
+
+    PostVo selectOne(QueryWrapper wrapper);
 }

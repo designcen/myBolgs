@@ -1,15 +1,19 @@
 package com.example.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.lang.Result;
+import com.example.entity.Post;
+import com.example.service.CommentService;
+import com.example.service.PostService;
 import com.example.utils.RedisUtils;
+import com.example.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import com.example.controller.BaseController;
 
 import java.util.*;
@@ -23,25 +27,30 @@ import java.util.*;
  * @since 2019-12-26
  */
 @RestController
-@RequestMapping("/post")
+@RequestMapping("")
 public class PostController extends BaseController {
 
     @Autowired
-    private RedisUtils redisUtils;
-
-    @GetMapping("/post/hots")
-    @ResponseBody
-    public Result hotPost(){
-        Set<ZSetOperations.TypedTuple> lastWeekRank = redisUtils.getZSetRank("last_week_rank",0,6);
-        List<Map<String,Object>> hotPosts = new ArrayList<>();
-        for (ZSetOperations.TypedTuple typedTuple : lastWeekRank) {
-          Map<String,Object> map = new HashMap<>();
-          map.put("common_count",typedTuple.getScore());
-          map.put("id",redisUtils.hget("rank_post_"+typedTuple.getValue(),"post:id"));
-          map.put("title",redisUtils.hget("rank_post_"+typedTuple.getValue(),"post:title"));
-          hotPosts.add(map);
-        }
-        return Result.succ(hotPosts);
+    private PostService postService;
+    @Autowired
+    private CommentService commentService;
+    @GetMapping("/category/{id:\\d*}")
+    public String category(@PathVariable Long id){
+        Page page = getPage();
+        IPage<PostVo> pageData = postService.paging(page,null,id,null,null,"created");
+        req.setAttribute("pageData",pageData);
+        // currentCategoryId是为了回显我当前选择的栏目
+        req.setAttribute("currentCategoryId",id);
+       return "post/category";
     }
 
+    @RequestMapping("/post/{id:\\d*}")
+    public String view(@PathVariable Long id){
+        QueryWrapper wrapper = new QueryWrapper<Post>().eq(id != null,"p.id",id);
+        PostVo postVo = postService.selectOne(wrapper);
+        IPage commentPage = commentService.paging(getPage(),null,id,"id");
+        req.setAttribute("post",postVo);
+        req.setAttribute("pageData",commentPage);
+        return "post/view";
+    }
 }

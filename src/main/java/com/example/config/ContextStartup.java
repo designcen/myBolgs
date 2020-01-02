@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.service.CategoryService;
 import com.example.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ import javax.servlet.ServletContext;
 public class ContextStartup implements ApplicationRunner, ServletContextAware {
 
     private ServletContext servletContext;
-
+    @Autowired
+    CategoryService categoryser;
     @Autowired
     PostService postService;
     @Override
@@ -31,7 +33,12 @@ public class ContextStartup implements ApplicationRunner, ServletContextAware {
         servletContext.setAttribute("base", servletContext.getContextPath());
         // 初始化首页周评论排行榜
         postService.initIndexWeekRank();
-        log.info("ContextStartup============================>加载categorys");
+        log.info("ContextStartup============================>加载本周热议");
+
+        servletContext.setAttribute("categorys",categoryser.list(null));
+        // currentCategoryId是为了回显当前选择的分类，默认为0（首页）
+        servletContext.setAttribute("currentCategoryId",0);
+        log.info("ContextStartup========================>加载categorys");
 
     }
 }
