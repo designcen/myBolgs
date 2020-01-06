@@ -61,6 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!user.getPassword().equals(password)) {
             throw new IncorrectCredentialsException("密码错误");
         }
+        //更新最后登录时间
         user.setLasted(new Date());
         this.updateById(user);
         AccountProfile profile = new AccountProfile();

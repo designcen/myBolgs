@@ -29,7 +29,7 @@ public class RedisConfig {
     /**
      * 重写redisTemplate方法，指定redisTempate泛型，序列化redis格式
      * @param redisConnectionFactory redis连接工厂
-     * @return
+     * @return redis模板
      */
     @Bean
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
@@ -64,8 +64,9 @@ public class RedisConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
-        List<Cache> caches = new ArrayList<Cache>();
+        List<Cache> caches = new ArrayList<>();
         caches.add(new ConcurrentMapCache("cache_post"));
+        caches.add(new ConcurrentMapCache("cache_comment"));
         cacheManager.setCaches(caches);
         return cacheManager;
     }

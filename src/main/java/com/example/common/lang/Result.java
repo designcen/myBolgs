@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * 统一返回结果
  * @author cenkang
- * @date 2019/12/28 - 13:57
+ * @Date 2019/12/28 - 13:57
  */
 public class Result implements Serializable{
     // 是否成功，可用code表示（如0表示成功，-1表示异常）
@@ -16,7 +16,9 @@ public class Result implements Serializable{
     private String msg;
     // 结果数据
     private Object data;
+    // 状态码，0表示成功
     private Integer status;
+    // action表示路径
     private String action;
     public static Result succ(Object data){
         Result result = new Result();

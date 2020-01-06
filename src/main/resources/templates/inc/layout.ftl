@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="${base}/res/css/global.css">
         <#-- 全局css\js-->
         <script src="${base}/res/layui/layui.js"></script>
+        <script src="${base}/res/js/jquery.min.js"></script>
         <title>${title?default('个人博客')}</title>
     </head>
     <body>

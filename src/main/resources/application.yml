@@ -8,6 +8,9 @@ spring:
   redis:
     host: localhost
     port: 6379
+    shrio:
+      host: localhost:6379
+      database: 1
   freemarker:
       request-context-attribute: req  #req访问request
       suffix: .ftl  #后缀名
