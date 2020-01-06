@@ -15,34 +15,7 @@
                 <@posts pn=1 size=5 categoryId=1>
                          <ul class="fly-list">
                              <#list results.records as post>
-                                 <li>
-                                     <a href="user/home.html" class="fly-avatar">
-                                         <img src="${post.authorAvatar}" alt="${post.authorName}">
-                                     </a>
-                                     <h2>
-                                         <a class="layui-badge">${post.categoryName}</a>
-                                         <a href="jie/detail.html">${post.title}</a>
-                                     </h2>
-                                     <div class="fly-list-info">
-                                         <a href="user/home.html" link>
-                                             <cite>${post.authorName}</cite>
-                                             <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                                             <#if post.authorVip gt 0>
-                                                 <i class="layui-badge fly-badge-vip">VIP${post.authorVip}</i>
-                                             </#if>
-                                         </a>
-                                         <span>${post.created?string('yyyy-MM-dd')}</span>
-                                         <span class="fly-list-nums">
-                                            <i class="iconfont icon-pinglun1" title="回答"></i> ${post.commentCount}
-                                         </span>
-                                     </div>
-                                     <div class="fly-list-badge">
-                                         <!--
-                                         <span class="layui-badge layui-bg-black">置顶</span>
-                                         <span class="layui-badge layui-bg-red">精帖</span>
-                                         -->
-                                     </div>
-                                 </li>
+                                 <@listing post></@listing>
                              </#list>
                          </ul>
                 </@posts>

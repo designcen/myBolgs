@@ -15,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CommentService extends IService<Comment> {
 
-    IPage paging(Page page, Object o, Long id, String id1);
+    IPage paging(Page page, Long userId, Long postId, String order);
 }

@@ -6,6 +6,7 @@ import com.example.common.lang.Result;
 import com.example.entity.User;
 import com.example.service.PostService;
 import com.example.service.UserService;
+import com.google.code.kaptcha.Producer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
@@ -25,11 +30,12 @@ import java.io.IOException;
 @Controller
 public class IndexController extends BaseController {
     private static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
-
     @Autowired
-    PostService postService;
+    private Producer producer;
     @Autowired
-    UserService userService;
+    private PostService postService;
+    @Autowired
+    private UserService userService;
 
 
     @GetMapping("/login")
@@ -66,7 +72,7 @@ public class IndexController extends BaseController {
         return "auth/register";
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     @ResponseBody
     public Result doRegister (User user,String captcha,String repass){
         String kaptcha = (String)SecurityUtils.getSubject().getSession().getAttribute(KAPTCHA_SESSION_KEY);
@@ -86,10 +92,29 @@ public class IndexController extends BaseController {
         SecurityUtils.getSubject().logout();
         return "redirect:/";
     }
+
+    /**
+     * 首页跳转
+     * @return
+     */
     @RequestMapping({"","/","/index"})
     public String index(){
         IPage pageData = postService.paging(getPage(),null,null,null,null,"created");
         req.setAttribute("pageData", pageData);
         return "index";
+    }
+
+    @GetMapping("/captcha.jpg")
+    public void captcha(HttpServletResponse response) throws IOException{
+        response.setHeader("Cache-Control", "no-store, no-cache");
+        response.setContentType("image/jpeg");
+        // 生成文字验证码
+        String text = producer.createText();
+        // 生成图片验证码
+        BufferedImage image = producer.createImage(text);
+        // 把验证码存到shiro的session中
+        SecurityUtils.getSubject().getSession().setAttribute(KAPTCHA_SESSION_KEY,text);
+        ServletOutputStream outputStream = response.getOutputStream();
+        ImageIO.write(image,"jpg",outputStream);
     }
 }

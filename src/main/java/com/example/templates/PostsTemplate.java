@@ -31,12 +31,14 @@ public class PostsTemplate extends TemplateDirective {
      */
     @Override
     public void execute(DirectiveHandler handler) throws Exception {
-        Long categoryId = handler.getLong("categoryId",1);
+        Long categoryId = handler.getLong("categoryId",0);
         int pn = handler.getInteger("pn",1);
         int size = handler.getInteger("size",10);
+        // 排序字段
         String order = handler.getString("order","created");
 
         Page page = new Page(pn,size);
         IPage results = postService.paging(page,null,categoryId,null,null,order);
+        handler.put(RESULTS, results).render();
     }
 }

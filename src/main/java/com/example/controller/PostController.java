@@ -34,6 +34,12 @@ public class PostController extends BaseController {
     private PostService postService;
     @Autowired
     private CommentService commentService;
+
+    /**
+     *  导航分类
+     * @param id 分类id
+     * @return
+     */
     @GetMapping("/category/{id:\\d*}")
     public String category(@PathVariable Long id){
         Page page = getPage();

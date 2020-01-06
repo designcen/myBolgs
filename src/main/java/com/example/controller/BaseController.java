@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author cenkang
- * @date 2019/12/26 - 22:18
+ * @Date 2019/12/26 - 22:18
  */
 public class BaseController {
 
@@ -17,7 +17,9 @@ public class BaseController {
 
 
     public Page getPage(){
+        //当前页数
         int pn = ServletRequestUtils.getIntParameter(req,"pn",1);
+        // 每页几条数据
         int size = ServletRequestUtils.getIntParameter(req,"size",10);
         Page page = new Page(pn,size);
         return page;

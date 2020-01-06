@@ -52,7 +52,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                     post.getCreated(),DateUnit.DAY);
             // 换算成秒s
             long expireTime = (7 - between) * 24 * 60 * 60;
-            // 缓存文章到set中，评论数量作为排行标准
+            // 缓存文章到zSet中，日期为集合名称，文章id为值（唯一），评论数量作为排行分数标准
             redisUtils.zSet(key,post.getId(),post.getCommentCount());
             // 设置有效期
             redisUtils.expire(key,expireTime);
@@ -97,7 +97,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                     post.getCreated(),DateUnit.DAY);
             long expireTime = (7 - between) * 24 * 60 * 60;
 
-            // 缓存文章基本信息（hash结构）
+            // 缓存文章基本信息（id、标题）（hash结构）
             redisUtils.hset("rank_post_" + post.getId(), "post:id",post.getId(),expireTime);
             redisUtils.hset("rank_post_" + post.getId(), "post:title", post.getTitle(), expireTime);
         }

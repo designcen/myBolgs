@@ -34,7 +34,7 @@ public class ContextStartup implements ApplicationRunner, ServletContextAware {
         // 初始化首页周评论排行榜
         postService.initIndexWeekRank();
         log.info("ContextStartup============================>加载本周热议");
-
+        // 首页导航分类是所有的地方都用到的，所以导航分类信息初始化到servletContext中，只启动初始化一次即可
         servletContext.setAttribute("categorys",categoryser.list(null));
         // currentCategoryId是为了回显当前选择的分类，默认为0（首页）
         servletContext.setAttribute("currentCategoryId",0);
