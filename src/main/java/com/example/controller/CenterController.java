@@ -6,12 +6,16 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.lang.Result;
+import com.example.entity.Category;
 import com.example.entity.Post;
 import com.example.entity.User;
+import com.example.entity.UserMessage;
 import com.example.shiro.AccountProfile;
+import com.example.vo.MessageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author cenkang
@@ -141,5 +146,47 @@ public class CenterController extends BaseController {
         user.setPassword(SecureUtil.md5(newPass));
         userService.updateById(user);
         return Result.succ("更新成功",null,"/center/setting");
+    }
+
+    @GetMapping("/message")
+    public String message(){
+        Page<UserMessage> page = getPage();
+        QueryWrapper wrapper = new QueryWrapper<UserMessage>()
+                .eq("to_user_id",getProfile())
+                .orderByDesc("created");
+        IPage<MessageVo> pageData = userMessageService.paging(page,wrapper);
+        req.setAttribute("pageData",pageData);
+        return "center/message";
+    }
+
+    @PostMapping("/message/remove")
+    @ResponseBody
+    public Result removeMsg(Long id,boolean all){
+        QueryWrapper<UserMessage> wrapper = new QueryWrapper<UserMessage>()
+                .eq("to_user_id",getProfile())
+                .eq(!all,"id",id);
+
+        // 只能删除自己的消息
+        boolean res = userMessageService.remove(wrapper);
+        return res ?
+                Result.succ("操作成功",null,"/center/message") : Result.fail("删除失败");
+    }
+
+    @GetMapping("/post/edit")
+    public String edit(){
+        String id = req.getParameter("id");
+        Post post = new Post();
+        if (!StringUtils.isEmpty(id)) {
+            post = postService.getById(Long.valueOf(id));
+            Assert.notNull(post, "文章已被删除！");
+            Long profileId = getProfileId();
+            Assert.isTrue(post.getUserId() == getProfileId(), "无权限编辑此文章！");
+        }
+        List<Category> categories = categoryService.list(new QueryWrapper<Category>()
+        .orderByDesc("order_num"));
+        req.setAttribute("post",post);
+        req.setAttribute("categories",categories);
+        return "post/edit";
+
     }
 }
