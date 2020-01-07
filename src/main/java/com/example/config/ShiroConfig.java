@@ -34,11 +34,13 @@ public class ShiroConfig {
 
     @Bean("securityManager")
     public SecurityManager securityManager(AccountRealm accountRealm, SessionManager sessionManager, CacheManager cacheManager){
+        // 定义shiro安全管理器，并配置需要实现的功能
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-
+        // 实现seeionManager功能
         securityManager.setSessionManager(sessionManager);
+        // 实现cacheManager功能
         securityManager.setCacheManager(cacheManager);
-
+        // 实现realm功能
         securityManager.setRealm(accountRealm);
 
         log.info("------------->securityManager注入完成");

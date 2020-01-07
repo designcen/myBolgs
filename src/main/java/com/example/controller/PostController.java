@@ -4,19 +4,9 @@ package com.example.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.common.lang.Result;
 import com.example.entity.Post;
-import com.example.service.CommentService;
-import com.example.service.PostService;
-import com.example.utils.RedisUtils;
 import com.example.vo.PostVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.controller.BaseController;
-
-import java.util.*;
 
 /**
  * <p>
@@ -29,11 +19,6 @@ import java.util.*;
 @RestController
 @RequestMapping("")
 public class PostController extends BaseController {
-
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private CommentService commentService;
 
     /**
      *  导航分类

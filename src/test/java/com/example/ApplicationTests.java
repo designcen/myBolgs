@@ -1,5 +1,6 @@
 package com.example;
 
+import cn.hutool.crypto.SecureUtil;
 import com.example.entity.User;
 import com.example.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -17,13 +18,6 @@ class ApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		User user = userService.getById(1L);
-		System.out.println(user.toString());
-	}
-	
-	@Test
-	public void namea(){
-		System.out.println(1111);
-	}
 
+	}
 }

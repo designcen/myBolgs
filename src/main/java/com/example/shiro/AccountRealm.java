@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
+ * 定义自己实现的realm域,并配置凭证匹配器
  * @author cenkang
  * @Date 2020/1/3 9:58
  */

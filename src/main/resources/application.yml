@@ -26,3 +26,8 @@ mybatis-plus:
   configuration:
     # 是否将sql打印到控制面板(该配置会将sql语句和查询的结果都打印到控制台)
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+file:
+  upload:
+    # user.dir表示用户根路径，现在图片我是直接存在了本地硬盘上，可以自行拓展上传到七牛云等云盘上。
+    dir: ${user.dir}/upload
+    url: http://localhost:8080/upload

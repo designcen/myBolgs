@@ -4,8 +4,6 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.lang.Result;
 import com.example.entity.User;
-import com.example.service.PostService;
-import com.example.service.UserService;
 import com.google.code.kaptcha.Producer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -30,12 +28,9 @@ import java.io.IOException;
 @Controller
 public class IndexController extends BaseController {
     private static final String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
+
     @Autowired
     private Producer producer;
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private UserService userService;
 
 
     @GetMapping("/login")
@@ -74,12 +69,12 @@ public class IndexController extends BaseController {
 
     @PostMapping("/register")
     @ResponseBody
-    public Result doRegister (User user,String captcha,String repass){
+    public Result doRegister (User user,String captcha,String repassword){
         String kaptcha = (String)SecurityUtils.getSubject().getSession().getAttribute(KAPTCHA_SESSION_KEY);
         if (!kaptcha.equalsIgnoreCase(captcha)) {
             return Result.fail("验证码不正确");
         }
-        if (repass == null || !repass.equals(user.getPassword())) {
+        if (repassword == null || !repassword.equals(user.getPassword())) {
             return Result.fail("两次输入密码不一致");
         }
         Result result = userService.register(user);
