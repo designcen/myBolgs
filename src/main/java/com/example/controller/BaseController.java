@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 public class BaseController {
 
     @Autowired
+    WsService wsService;
+    @Autowired
     HttpServletRequest req;
 
     @Autowired

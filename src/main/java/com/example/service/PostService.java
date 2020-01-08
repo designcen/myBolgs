@@ -25,4 +25,8 @@ public interface PostService extends IService<Post> {
     IPage paging(Page page,Long userId, Long categoryId,Integer level, Boolean recommend, String order);
 
     PostVo selectOne(QueryWrapper wrapper);
+
+    void incrZsetValueAndUnionForLastWeekRank(Long postId, boolean isIncr);
+
+    void setViewCount(Post post);
 }

@@ -47,6 +47,9 @@ public class UserMessage extends BaseEntity {
      * 1:评论消息，2:系统消息
      */
     private Integer type;
-
+    /**
+     * 状态：0未读，1已读
+     */
+    private Integer status;
 
 }

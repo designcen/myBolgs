@@ -1,9 +1,12 @@
 package com.example.controller;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.lang.Result;
 import com.example.entity.User;
+import com.example.entity.UserMessage;
 import com.google.code.kaptcha.Producer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -111,5 +114,14 @@ public class IndexController extends BaseController {
         SecurityUtils.getSubject().getSession().setAttribute(KAPTCHA_SESSION_KEY,text);
         ServletOutputStream outputStream = response.getOutputStream();
         ImageIO.write(image,"jpg",outputStream);
+    }
+
+    @PostMapping("/message/nums/")
+    @ResponseBody
+    public Object messageNums() throws IOException{
+        int count = userMessageService.count(new QueryWrapper<UserMessage>()
+        .eq("to_user_id",getProfile())
+        .eq("status",0));
+        return MapUtil.builder().put("status",0).put("count",count).build();
     }
 }

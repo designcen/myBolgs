@@ -35,9 +35,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Result.fail("必要字段不能为空");
         }
         // 查看数据库中是否存在该邮箱
-        User databaseUser = this.getOne(new QueryWrapper<User>().eq("email",user.getEmail()));
+        User databaseUser = this.getOne(new QueryWrapper<User>().eq("email",user.getEmail())
+                // 加上昵称唯一性的校验
+        .or().eq("username",user.getUsername()));
         if (databaseUser != null) {
-            return Result.fail("邮箱已被注册");
+            return Result.fail("邮箱或昵称已被注册");
         }
         String passMd5 = SecureUtil.md5(user.getPassword());
         databaseUser = new User();

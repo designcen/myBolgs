@@ -135,4 +135,29 @@ public class RedisUtils {
     public Object hget(String key, String item) {
         return redisTemplate.opsForHash().get(key, item);
     }
+
+    public void zIncrementScore(String key, Object value, long delta) {
+        redisTemplate.opsForZSet().incrementScore(key,value,delta);
+    }
+
+    /**
+     * 判断hash表中是否有该项的值
+     *
+     * @param key  键 不能为null
+     * @param item 项 不能为null
+     * @return true 存在 false不存在
+     */
+    public boolean hHasKey(String key, String item) {
+        return redisTemplate.opsForHash().hasKey(key, item);
+    }
+
+    /**
+     * 删除hash表中的值
+     *
+     * @param key  键 不能为null
+     * @param item 项 可以使多个 不能为null
+     */
+    public void hdel(String key, Object... item) {
+        redisTemplate.opsForHash().delete(key, item);
+    }
 }

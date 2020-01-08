@@ -86,6 +86,29 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         return postMapper.selectOne(wrapper);
     }
 
+    @Override
+    public void incrZsetValueAndUnionForLastWeekRank(Long postId, boolean isIncr) {
+        String dayRank = "day_rank:" + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
+        // 文章阅读加一
+        redisUtils.zIncrementScore(dayRank, postId, isIncr? 1: -1);
+        this.hashCachePostIdAndTitle(this.getById(postId));
+        // 重新union最近7天
+        this.zUnionAndStoreLast7DaysforLastWeekRank();
+    }
+
+    @Override
+    public void setViewCount(Post post) {
+        // 从缓存中获取阅读量
+        Integer viewCount = (Integer) redisUtils.hget("rank_post_" + post.getId(),"post:viewCount");
+        if (viewCount != null) {
+            post.setViewCount(viewCount + 1);
+        }else{
+            post.setViewCount(post.getViewCount() + 1);
+        }
+        // 设置新的阅读
+        redisUtils.hset("rank_post_" + post.getId(),"post:viewCount",post.getViewCount());
+    }
+
     /**
      * hash结构缓存文章标题和id
      * @param post

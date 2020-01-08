@@ -21,7 +21,7 @@ public class AuthFilter extends UserFilter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        //异步请求要先登录
+        // 判断是否是异步请求，如果是要先登录
         String header = request.getHeader("X-Requested-With");
         if (header != null && "XMLHttpRequest".equals(header)) {
             Subject subject = SecurityUtils.getSubject();
