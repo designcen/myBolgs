@@ -22,15 +22,20 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * shiro权限配置
+ * @author cenkang
+ * @Date 2019/12/29 - 0:19
+ */
 @Slf4j
 @Configuration
 public class ShiroConfig {
 
     @Value("${spring.redis.shrio.host}")
-    private String host;
+    private String host; // redis的主机地址
 
     @Value("${spring.redis.shrio.database}")
-    private int database;
+    private int database;  // redis的数据库
 
     @Bean("securityManager")
     public SecurityManager securityManager(AccountRealm accountRealm, SessionManager sessionManager, CacheManager cacheManager){
@@ -40,7 +45,7 @@ public class ShiroConfig {
         securityManager.setSessionManager(sessionManager);
         // 实现cacheManager功能
         securityManager.setCacheManager(cacheManager);
-        // 实现realm功能
+        // 实现自定义的realm功能
         securityManager.setRealm(accountRealm);
 
         log.info("------------->securityManager注入完成");
@@ -115,9 +120,9 @@ public class ShiroConfig {
     RedisCacheManager redisCacheManager() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(redisManager());
-        //redis中针对不同用户缓存(此处的id需要对应user实体中的id字段,用于唯一标识)
+        // redis中针对不同用户缓存(此处的id需要对应user实体中的id字段,用于唯一标识)
         redisCacheManager.setPrincipalIdFieldName("id");
-        //用户权限信息缓存时间
+        // 用户权限信息缓存时间s
         redisCacheManager.setExpire(200000);
         return redisCacheManager;
     }

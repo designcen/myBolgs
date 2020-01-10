@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
+ * 异步配置
  * @author cenkang
  * @Date 2020/1/8 17:25
  */
@@ -14,7 +15,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync // 开启异步配置
 public class AsyncConfig {
     @Bean
-    // 重写AsyncTaskExecutor,配置线程参数
+    // 重写AsyncTaskExecutor,重新配置线程参数
     AsyncTaskExecutor asyncTaskExecutor(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(100);

@@ -1,6 +1,8 @@
 package com.example.common.enum_common;
 
 /**
+ *
+ * 公共编码枚举
  * @author cenkang
  * @date 2019/12/28 - 14:06
  */

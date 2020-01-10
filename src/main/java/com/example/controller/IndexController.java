@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
+ * 首页
  * @author cenkang
  * @date 2019/12/26 - 23:42
  */
@@ -35,11 +36,47 @@ public class IndexController extends BaseController {
     @Autowired
     private Producer producer;
 
+    /**
+     * 首页跳转
+     * @return
+     */
+    @RequestMapping({"","/","/index"})
+    public String index(){
+        IPage pageData = postService.paging(getPage(),null,null,null,null,"created");
+        req.setAttribute("pageData", pageData);
+        return "index";
+    }
+
+    @GetMapping("/captcha.jpg")
+    public void captcha(HttpServletResponse response) throws IOException{
+        response.setHeader("Cache-Control", "no-store, no-cache");
+        response.setContentType("image/jpeg");
+        // 生成文字验证码
+        String text = producer.createText();
+        // 生成图片验证码
+        BufferedImage image = producer.createImage(text);
+        // 把验证码存到shiro的session中
+        SecurityUtils.getSubject().getSession().setAttribute(KAPTCHA_SESSION_KEY,text);
+        ServletOutputStream outputStream = response.getOutputStream();
+        ImageIO.write(image,"jpg",outputStream);
+    }
 
     @GetMapping("/login")
     public String login(){
         return "auth/login";
     }
+
+    @GetMapping("register")
+    public String register(){
+        return "auth/register";
+    }
+
+    @GetMapping("logout")
+    public String logout() throws IOException {
+        SecurityUtils.getSubject().logout();
+        return "redirect:/";
+    }
+
     @PostMapping("/login")
     @ResponseBody
     public Result doLogin(String email,String password){
@@ -65,11 +102,6 @@ public class IndexController extends BaseController {
         return Result.succ("登陆成功",null,"/");
     }
 
-    @GetMapping("register")
-    public String register(){
-        return "auth/register";
-    }
-
     @PostMapping("/register")
     @ResponseBody
     public Result doRegister (User user,String captcha,String repassword){
@@ -83,37 +115,6 @@ public class IndexController extends BaseController {
         Result result = userService.register(user);
         result.setAction("/login"); // 注册成功后跳转的页面
         return result;
-    }
-
-    @GetMapping("logout")
-    public String logout() throws IOException {
-        SecurityUtils.getSubject().logout();
-        return "redirect:/";
-    }
-
-    /**
-     * 首页跳转
-     * @return
-     */
-    @RequestMapping({"","/","/index"})
-    public String index(){
-        IPage pageData = postService.paging(getPage(),null,null,null,null,"created");
-        req.setAttribute("pageData", pageData);
-        return "index";
-    }
-
-    @GetMapping("/captcha.jpg")
-    public void captcha(HttpServletResponse response) throws IOException{
-        response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/jpeg");
-        // 生成文字验证码
-        String text = producer.createText();
-        // 生成图片验证码
-        BufferedImage image = producer.createImage(text);
-        // 把验证码存到shiro的session中
-        SecurityUtils.getSubject().getSession().setAttribute(KAPTCHA_SESSION_KEY,text);
-        ServletOutputStream outputStream = response.getOutputStream();
-        ImageIO.write(image,"jpg",outputStream);
     }
 
     @PostMapping("/message/nums/")

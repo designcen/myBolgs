@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ import java.util.List;
  * @author cenkang
  * @Date 2019/12/29 - 0:19
  */
+@EnableCaching      // 开启一下我们的缓存注解功能
 @Configuration
 public class RedisConfig {
 
@@ -35,16 +37,17 @@ public class RedisConfig {
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
 
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
-
+        // 获取链接
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+
         // json格式
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         // jackson的映射
         ObjectMapper om = new ObjectMapper();
-
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         jackson2JsonRedisSerializer.setObjectMapper(om);
 
+        // string格式
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // key采用String的序列化方式
         redisTemplate.setKeySerializer(stringRedisSerializer);

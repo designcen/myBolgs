@@ -4,15 +4,19 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * 公共常量
+ */
 @Data
 @Component
 public class Constant {
 
+
     @Value("${file.upload.dir}")
-    private String uploadDir;
+    private String uploadDir; // 用户本地文件上传的路径
 
     @Value("${file.upload.url}")
-    private String uploadUrl;
+    private String uploadUrl; //项目中上传的路径
 
     public final static Long IM_DEFAULT_GROUP_ID = 999L;
     public static final Long IM_DEFAULT_USER_ID = 999L;

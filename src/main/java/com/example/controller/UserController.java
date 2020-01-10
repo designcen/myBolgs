@@ -15,16 +15,17 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ *  用户基本信息
  * </p>
  *
  * @author cenkang
  * @since 2019-12-26
  */
 @RestController
+@RequestMapping("/user")
 public class UserController extends BaseController {
 
-    @RequestMapping("/user/{id:\\d*}")
+    @RequestMapping("/{id:\\d*}")
     public String home(@PathVariable Long id){
         User user = userService.getById(id);
         user.setPassword(null);

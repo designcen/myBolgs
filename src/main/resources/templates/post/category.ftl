@@ -1,5 +1,3 @@
-<#include "../inc/listing.ftl">
-<#include "../inc/page.ftl">
 <ul class="fly-list">
   <#list pageData.records as post>
     <@listing post></@listing>
