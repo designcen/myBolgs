@@ -1,6 +1,5 @@
-<#include "../inc/layout.ftl"/>
-<#include "../inc/centerBanner.ftl"/>
-<#include "../inc/page.ftl"/>
+<#include "/inc/layout.ftl"/>
+
 <@layout "用户中心">
 
 <div class="layui-container fly-marginTop fly-user-main">

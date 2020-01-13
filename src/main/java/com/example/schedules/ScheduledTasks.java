@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 定时器功能
  * @author cenkang
  * @Date 2020/1/8 17:47
  */
@@ -29,7 +30,7 @@ public class ScheduledTasks {
     @Autowired
     PostService postService;
     /**
-     * 阅读数量同步任务
+     * 阅读数量同步任务，将redis的阅读数量同步到数据库中
      * 每天2点同步
      */
     @Scheduled(cron = "0 0 2 * * ?")
@@ -37,6 +38,7 @@ public class ScheduledTasks {
     public void postViewCountSync(){
         Set<String> keys = redisTemplate.keys("rank_post_*");
         List<String> ids = new ArrayList<>();
+        // 获取每篇文章的id
         for (String key  : keys) {
             String postId = key.substring("rank_post_".length());
             if (redisUtils.hHasKey("rank_post_" + postId,"post:viewCount")) {
@@ -47,6 +49,8 @@ public class ScheduledTasks {
         List<Post> posts = postService.list(new QueryWrapper<Post>().in("id",ids));
         Iterator<Post> iterator = posts.iterator();
         List<String> syncKeys = new ArrayList<>();
+
+        // 将redis中的阅读数量同步到数据库中
         while (iterator.hasNext()){
             Post post = iterator.next();
             Object count = redisUtils.hget("rank_post_" + post.getId(),"post:viewCount");
@@ -57,6 +61,7 @@ public class ScheduledTasks {
                 // 不需要同步的
             }
         }
+
         if (posts.isEmpty()) return;
         boolean isSuccess = postService.updateBatchById(posts);
         if (isSuccess) {

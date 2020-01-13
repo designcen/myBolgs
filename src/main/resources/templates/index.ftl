@@ -1,4 +1,4 @@
-<#include "inc/layout.ftl"/>
+<#include "/inc/layout.ftl"/>
 <@layout "首页">
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
@@ -49,6 +49,8 @@
             </div>
 
         </div>
+        <!--侧边栏的签到等-->
+        <#include "/inc/right.ftl" />
     </div>
 </div>
 </@layout>

@@ -18,15 +18,15 @@
     </head>
     <body>
         <#-- 宏引用-->
-        <#include "common.ftl" />
+        <#include "/inc/common.ftl" />
         <#-- 头-->
-        <#include "header.ftl" />
+        <#include "/inc/header.ftl" />
         <#-- 头部导航栏-->
-        <#include "header_panel.ftl" />
+        <#include "/inc/header_panel.ftl" />
         <#-- 中间部分-->
         <#nested>
         <#-- 尾-->
-        <#include "footer.ftl" />
+        <#include "/inc/footer.ftl" />
     </body>
 </html>
 <script>

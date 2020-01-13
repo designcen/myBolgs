@@ -1,4 +1,4 @@
-<#include "inc/layout.ftl"/>
+<#include "/inc/layout.ftl"/>
 
 <@layout "首页">
 

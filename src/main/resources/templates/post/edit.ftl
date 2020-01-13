@@ -1,7 +1,7 @@
-<#include "../inc/layout.ftl"/>
+<#include "/inc/layout.ftl"/>
 
 <@layout "首页">
-<#include "../inc/header_panel.ftl" />
+<#include "/inc/header_panel.ftl" />
 
 <div class="layui-container fly-marginTop">
     <div class="fly-panel" pad20 style="padding-top: 5px;">
