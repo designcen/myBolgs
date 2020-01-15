@@ -19,15 +19,15 @@
         <ul class="layui-nav fly-nav-user">
             <@shiro.guest>
                  <!-- 未登入的状态 -->
-            <li class="layui-nav-item">
-                <a class="iconfont icon-touxiang layui-hide-xs" href="/login"></a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="/login">登入</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="/register">注册</a>
-            </li>
+                <li class="layui-nav-item">
+                    <a class="iconfont icon-touxiang layui-hide-xs" href="/login"></a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="/login">登入</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="/register">注册</a>
+                </li>
             </@shiro.guest>
 
             <!-- 登入后的状态 -->

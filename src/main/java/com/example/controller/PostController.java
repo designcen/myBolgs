@@ -1,7 +1,6 @@
 package com.example.controller;
 
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.common.lang.Result;
 import com.example.entity.*;
 import com.example.vo.PostVo;
+import org.springframework.util.Assert;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * <p>
- *  帖子
- * </p>
- *
+ *  博客帖子控制器
  * @author cenkang
  * @since 2019-12-26
  */
@@ -29,6 +26,11 @@ import java.util.List;
 @RequestMapping("/post")
 public class PostController extends BaseController {
 
+    /**
+     * 查看帖子
+     * @param id 帖子id
+     * @return
+     */
     @RequestMapping("/{id:\\d*}")
     public String view(@PathVariable Long id){
         QueryWrapper wrapper = new QueryWrapper<Post>().eq(id != null,"p.id",id);
@@ -41,13 +43,18 @@ public class PostController extends BaseController {
         return "post/view";
     }
 
+    /**
+     * 删除帖子
+     * @param id 帖子id
+     * @return
+     */
     @PostMapping("/delete")
     @Transactional
     @ResponseBody
     public Result delete(Long id){
         Post post = postService.getById(id);
-        org.springframework.util.Assert.notNull(post,"该帖子已被删除");
-        org.springframework.util.Assert.isTrue(post.getUserId() == getProfileId(),"无权限删除此文章！");
+        Assert.notNull(post,"该帖子已被删除");
+        Assert.isTrue(post.getUserId() == getProfileId(),"无权限删除此文章！");
         postService.removeById(id);
         // 删除相关消息，收藏等
         userMessageService.removeByMap(MapUtil.of("post_id", id));
@@ -55,14 +62,21 @@ public class PostController extends BaseController {
         return Result.succ("删除成功",null,"/center");
     }
 
+    /**
+     * 评论帖子
+     * @param pid 帖子id
+     * @param parentId
+     * @param content 评论内容
+     * @return
+     */
     @PostMapping("/reply")
     @Transactional
     @ResponseBody
     public Result reply(Long pid,Long parentId,String content) {
-        org.springframework.util.Assert.notNull(pid, "找不到对应文章！");
-        org.springframework.util.Assert.hasLength(content, "评论内容不能为空！");
+        Assert.notNull(pid, "找不到对应文章！");
+        Assert.hasLength(content, "评论内容不能为空！");
         Post post = postService.getById(pid);
-        org.springframework.util.Assert.isTrue(post != null, "该文章已被删除");
+        Assert.isTrue(post != null, "该文章已被删除");
         // 保存评论
         Comment comment = new Comment();
         comment.setPostId(pid);
@@ -77,7 +91,7 @@ public class PostController extends BaseController {
         // 评论数量加一
         post.setCommentCount(post.getCommentCount() + 1);
         postService.saveOrUpdate(post);
-        //更新首页排版版的评论数量
+        // 更新首页排版评论数量
         postService.incrZsetValueAndUnionForLastWeekRank(comment.getPostId(), true);
         // 自己评论自己不需要通知
         if (post.getUserId() != getProfileId()) {
@@ -91,6 +105,7 @@ public class PostController extends BaseController {
             message.setContent(comment.getContent());
             message.setCreated(new Date());
             userMessageService.save(message);
+            // webSocket向浏览器发送消息
             wsService.sendMessCountToUser(message.getToUserId(),null);
         }
         // 通知@的人
@@ -120,9 +135,9 @@ public class PostController extends BaseController {
     @Transactional
     @ResponseBody
     public Result reply(Long id){
-        org.springframework.util.Assert.notNull(id,"评论id不能为空！");
+        Assert.notNull(id,"评论id不能为空！");
         Comment comment = commentService.getById(id);
-        org.springframework.util.Assert.notNull(comment,"找不到对应评论！");
+        Assert.notNull(comment,"找不到对应评论！");
         if (comment.getUserId() != getProfileId()) {
             return Result.fail(("不是你发表的评论！"));
         }
@@ -143,9 +158,9 @@ public class PostController extends BaseController {
         Post post = new Post();
         if (!StringUtils.isEmpty(id)) {
             post = postService.getById(Long.valueOf(id));
-            org.springframework.util.Assert.notNull(post, "文章已被删除！");
+            Assert.notNull(post, "文章已被删除！");
             Long profileId = getProfileId();
-            org.springframework.util.Assert.isTrue(post.getUserId() == getProfileId(), "无权限编辑此文章！");
+            Assert.isTrue(post.getUserId() == getProfileId(), "无权限编辑此文章！");
         }
         List<Category> categories = categoryService.list(new QueryWrapper<Category>()
                 .orderByDesc("order_num"));
@@ -180,7 +195,7 @@ public class PostController extends BaseController {
             post.setVoteUp(0);
         }else{
             Post tempPost = postService.getById(post.getId());
-            org.springframework.util.Assert.isTrue(tempPost.getUserId() == getProfileId(),"无权限编辑此文章！");
+            Assert.isTrue(tempPost.getUserId() == getProfileId(),"无权限编辑此文章！");
         }
         postService.saveOrUpdate(post);
         return Result.succ("发布成功",null,"/post/" + post.getId());

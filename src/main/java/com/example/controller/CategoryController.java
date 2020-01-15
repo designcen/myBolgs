@@ -31,7 +31,7 @@ public class CategoryController extends BaseController {
         Page page = getPage();
         IPage<PostVo> pageData = postService.paging(page,null,id,null,null,"created");
         req.setAttribute("pageData",pageData);
-        // currentCategoryId是为了回显我当前选择的栏目
+        // currentCategoryId是为了回显当前选择的栏目
         req.setAttribute("currentCategoryId",id);
         return "post/category";
     }

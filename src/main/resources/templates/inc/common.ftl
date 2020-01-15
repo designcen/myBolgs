@@ -70,7 +70,7 @@
 </script>
 </#macro>
 
-<#-- -->
+<#-- 文章列表 -->
 <#macro listing post>
    <li>
        <a href="${base}/user/${post.authorId}" class="fly-avatar">

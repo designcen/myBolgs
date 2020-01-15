@@ -88,6 +88,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     public void incrZsetValueAndUnionForLastWeekRank(Long postId, boolean isIncr) {
+
         String dayRank = "day_rank:" + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
         // 文章阅读加一
         redisUtils.zIncrementScore(dayRank, postId, isIncr? 1: -1);

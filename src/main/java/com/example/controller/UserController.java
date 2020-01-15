@@ -29,7 +29,7 @@ public class UserController extends BaseController {
     public String home(@PathVariable Long id){
         User user = userService.getById(id);
         user.setPassword(null);
-        // 30天内容的文章
+        // 30天文章的内容
         Date date30Before = DateUtil.offsetDay(new Date(),-30).toJdkDate();
         List<Post> posts = postService.list(new QueryWrapper<Post>()
         .eq("user_id",id)

@@ -1,12 +1,9 @@
 package com.example.controller;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.lang.Result;
 import com.example.entity.User;
-import com.example.entity.UserMessage;
 import com.google.code.kaptcha.Producer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -47,15 +44,21 @@ public class IndexController extends BaseController {
         return "index";
     }
 
+    /**
+     * 生成验证码
+     * @param response http响应
+     * @throws IOException
+     */
     @GetMapping("/captcha.jpg")
     public void captcha(HttpServletResponse response) throws IOException{
         response.setHeader("Cache-Control", "no-store, no-cache");
+        // 设置响应为图片形式
         response.setContentType("image/jpeg");
         // 生成文字验证码
         String text = producer.createText();
         // 生成图片验证码
         BufferedImage image = producer.createImage(text);
-        // 把验证码存到shiro的session中
+        // 把验证码存到shiro的session中，等待验证时使用
         SecurityUtils.getSubject().getSession().setAttribute(KAPTCHA_SESSION_KEY,text);
         ServletOutputStream outputStream = response.getOutputStream();
         ImageIO.write(image,"jpg",outputStream);
@@ -66,13 +69,13 @@ public class IndexController extends BaseController {
         return "auth/login";
     }
 
-    @GetMapping("register")
+    @GetMapping("/register")
     public String register(){
         return "auth/register";
     }
 
-    @GetMapping("logout")
-    public String logout() throws IOException {
+    @GetMapping("/logout")
+    public String logout() {
         SecurityUtils.getSubject().logout();
         return "redirect:/";
     }
@@ -117,12 +120,4 @@ public class IndexController extends BaseController {
         return result;
     }
 
-    @PostMapping("/message/nums/")
-    @ResponseBody
-    public Object messageNums() throws IOException{
-        int count = userMessageService.count(new QueryWrapper<UserMessage>()
-        .eq("to_user_id",getProfile())
-        .eq("status",0));
-        return MapUtil.builder().put("status",0).put("count",count).build();
-    }
 }
