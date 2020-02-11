@@ -36,6 +36,14 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 2 * * ?")
     // @Scheduled(cron = "0 0/1 * * * *") // 一分钟（测试用）
     public void postViewCountSync(){
+        /**
+         * 获取所有需要同步阅读的列表，这里用了keys命令，
+         * 实际上当redis的缓存越来越大的时候，是不能再使用这keys命令的，因为keys命令会检索所有的key，是个耗时的过程，
+         * 而redis又是个单线程的中间件，会影响其他命令的执行。所以理论上需要用scan命令。考虑到这里博客只是个简单业务，
+         * redis不会很大，所以就直接用了keys命令，后期需要优化。
+         *
+         * 获取到列表后，就是获取所有的实体，然后批量更新阅读量。
+         */
         Set<String> keys = redisTemplate.keys("rank_post_*");
         List<String> ids = new ArrayList<>();
         // 获取每篇文章的id
