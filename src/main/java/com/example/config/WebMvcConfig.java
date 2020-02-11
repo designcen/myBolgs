@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
+ * 采用JavaBean的形式来代替传统的xml配置文件形式进行针对框架个性化定制，可以自定义一些Handler，Interceptor，ViewResolver，MessageConverter
  * @author cenkang
  * @date 2019/12/29 - 10:43
  */
@@ -40,6 +41,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     /**
      * 因为上传的图片位置是存放在根目录下的，
      * 这涉及到一些静态资源的加载问题，所以需要在mvc配置中添加这个静态资源的位置
+     * addResoureHandler：指的是对外暴露的访问路径,addResourceLocations：指的是内部文件放置的目录
      *
      * @param registry 静态资源处理
      */
