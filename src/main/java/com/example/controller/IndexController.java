@@ -4,16 +4,18 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.common.lang.Result;
 import com.example.entity.User;
+import com.example.search.model.PostDocument;
+import com.example.service.SearchService;
 import com.google.code.kaptcha.Producer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -33,6 +35,8 @@ public class IndexController extends BaseController {
     @Autowired
     private Producer producer;
 
+    @Autowired
+    private SearchService searchService;
     /**
      * 首页跳转
      * @return
@@ -120,4 +124,20 @@ public class IndexController extends BaseController {
         return result;
     }
 
+    @RequestMapping("/search")
+    public String search(@RequestParam(defaultValue = "1") Integer current,
+                         @RequestParam(defaultValue = "10")Integer size,
+                         String q) {
+
+        Pageable pageable = PageRequest.of(current - 1, size);
+        Page<PostDocument> documents = searchService.query(pageable, q);
+
+        IPage pageData = new com.baomidou.mybatisplus.extension.plugins.pagination.Page
+                (current, size, documents.getTotalElements());
+        pageData.setRecords(documents.getContent());
+
+        req.setAttribute("pageData", pageData);
+        req.setAttribute("q", q);
+        return "search";
+    }
 }

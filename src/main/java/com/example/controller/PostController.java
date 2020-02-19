@@ -6,8 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.common.lang.Result;
+import com.example.config.RabbitMqConfig;
 import com.example.entity.*;
+import com.example.search.common.PostMqIndexMessage;
 import com.example.vo.PostVo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -25,6 +30,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/post")
 public class PostController extends BaseController {
+    @Autowired
+    AmqpTemplate amqpTemplate;
 
     /**
      * 查看帖子
@@ -51,7 +58,7 @@ public class PostController extends BaseController {
     @PostMapping("/delete")
     @Transactional
     @ResponseBody
-    public Result delete(Long id){
+    public Result delete(Long id) throws JsonProcessingException {
         Post post = postService.getById(id);
         Assert.notNull(post,"该帖子已被删除");
         Assert.isTrue(post.getUserId() == getProfileId(),"无权限删除此文章！");
@@ -59,6 +66,10 @@ public class PostController extends BaseController {
         // 删除相关消息，收藏等
         userMessageService.removeByMap(MapUtil.of("post_id", id));
         userCollectionService.removeByMap(MapUtil.of("post_id",id));
+
+        //发送异步消息更新ES
+        amqpTemplate.convertAndSend(RabbitMqConfig.ES_EXCHANGE, RabbitMqConfig.ES_BIND_KEY,
+                objectMapper.writeValueAsString(new PostMqIndexMessage(post.getId(), PostMqIndexMessage.REMOVE)));
         return Result.succ("删除成功",null,"/center");
     }
 
@@ -173,7 +184,7 @@ public class PostController extends BaseController {
     @PostMapping("/submit")
     @Transactional
     @ResponseBody
-    public Result submit(@Valid Post post, BindingResult bindingResult, String vercode){
+    public Result submit(@Valid Post post, BindingResult bindingResult, String vercode) throws JsonProcessingException {
         // 后期改正，此处应该是页面验证码
         if (!"2".equals(vercode)) {
             return Result.fail("验证码错误");
@@ -182,6 +193,7 @@ public class PostController extends BaseController {
         if (bindingResult.hasErrors()) {
             return  Result.fail(bindingResult.getFieldError().getDefaultMessage());
         }
+        String type;
         if (post.getId() == null) {
             post.setUserId(getProfileId());
             post.setModified(new Date());
@@ -193,11 +205,17 @@ public class PostController extends BaseController {
             post.setViewCount(0);
             post.setVoteDown(0);
             post.setVoteUp(0);
+            type = PostMqIndexMessage.CREATE;
         }else{
             Post tempPost = postService.getById(post.getId());
             Assert.isTrue(tempPost.getUserId() == getProfileId(),"无权限编辑此文章！");
+            type = PostMqIndexMessage.UPDATE;
         }
         postService.saveOrUpdate(post);
+
+        //发送异步消息更新ES
+        amqpTemplate.convertAndSend(RabbitMqConfig.ES_EXCHANGE, RabbitMqConfig.ES_BIND_KEY,
+                objectMapper.writeValueAsString(new PostMqIndexMessage(post.getId(), type)));
         return Result.succ("发布成功",null,"/post/" + post.getId());
     }
 }
