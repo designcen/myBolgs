@@ -9,7 +9,7 @@
                     <a>置顶</a>
                     <a href="#signin" class="layui-hide-sm layui-show-xs-block fly-right" id="LAY_goSignin" style="color: #FF5722;">去签到</a>
                 </div>
-                <@posts pn=1 size=5>
+                <@posts pn=1 size=5 categoryId=1>
                      <ul class="fly-list">
                          <#list results.records as post>
                              <@listing post></@listing>

@@ -30,13 +30,13 @@ public class PostDocument implements Serializable {
     private String description;
 
     private Long authorId;
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Text)
     private String authorName;
     private String authorVip;
     private String authorAvatar;
 
     private Long categoryId;
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Text)
     private String categoryName;
 
     private Boolean recommend;
@@ -48,7 +48,7 @@ public class PostDocument implements Serializable {
     private Integer commentCount;
     private Integer viewCount;
 
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Text)
     private Date created;
 
 }

@@ -28,7 +28,9 @@ public class DirectiveHandler {
      * 构建 DirectiveHandler
      *
      * @param env 系统环境变量，通常用它来输出相关内容，如Writer out = env.getOut()。
-     * @param parameters 自定义标签传过来的对象
+     * @param parameters 自定义标签传过来的对象,其key=自定义标签的参数名，value值是TemplateModel类型，
+     * 而TemplateModel是一个接口类型，通常我们都使用TemplateScalarModel接口来替代它获取一个String 值，如TemplateScalarModel.getAsString();
+     * 当然还有其它常用的替代接口，如TemplateNumberModel获取number，TemplateHashModel等。
      * @param loopVars 循环替代变量
      * @param body 用于处理自定义标签中的内容，如<@myDirective>将要被处理的内容</@myDirective>；当标签是<@myDirective />格式时，body=null。
      */

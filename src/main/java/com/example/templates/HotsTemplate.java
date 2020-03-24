@@ -30,6 +30,7 @@ public class HotsTemplate extends TemplateDirective {
 
     @Override
     public void execute(DirectiveHandler handler) throws Exception {
+        // 获取redis的zset中最近7天的文章
         Set<ZSetOperations.TypedTuple> lastWeekRank = redisUtils.getZSetRank("last_week_rank",0,6);
         List<Map<String,Object>> hotPosts = new ArrayList<>();
         for (ZSetOperations.TypedTuple typedTuple : lastWeekRank) {

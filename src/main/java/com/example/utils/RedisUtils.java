@@ -54,19 +54,36 @@ public class RedisUtils {
         return redisTemplate.opsForZSet().add(key,value,score);
     }
 
+    public void zUnionAndStore(String key, List<String> otherKeys, String destKey) {
+        redisTemplate.opsForZSet().unionAndStore(key,otherKeys,destKey);
+    }
+
     /**
-     * 判断key是否存在
-     *
-     * @param key 键
-     * @return true 存在 false不存在
+     * 获取有序集 key 中成员 member 的排名 。
+     * 其中有序集成员按 score 值递减 (从大到小) 排序。
+     * @param key
+     * @param start
+     * @param end
+     * @return
      */
-    public boolean hasKey(String key) {
-        try {
-            return redisTemplate.hasKey(key);
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
+    public Set<ZSetOperations.TypedTuple> getZSetRank(String key, long start, long end) {
+        return redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end);
+    }
+
+
+    public void zIncrementScore(String key, Object value, long delta) {
+        redisTemplate.opsForZSet().incrementScore(key,value,delta);
+    }
+
+    /**
+     * HashGet
+     *
+     * @param key  键 不能为null
+     * @param item 项 不能为null
+     * @return 值
+     */
+    public Object hget(String key, String item) {
+        return redisTemplate.opsForHash().get(key, item);
     }
 
     /**
@@ -110,21 +127,6 @@ public class RedisUtils {
     }
 
     /**
-     * 将数据放入set缓存
-     *
-     * @param key    键
-     * @param values 值 可以是多个
-     * @return 成功个数
-     */
-    public long sSet(String key, Object... values) {
-        try {
-            return redisTemplate.opsForSet().add(key, values);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-    /**
      * HashSet
      *
      * @param key 键
@@ -140,68 +142,6 @@ public class RedisUtils {
             return false;
         }
     }
-    /**
-     * 移除值为value的
-     *
-     * @param key    键
-     * @param values 值 可以是多个
-     * @return 移除的个数
-     */
-    public long setRemove(String key, Object... values) {
-        try {
-            Long count = redisTemplate.opsForSet().remove(key, values);
-            return count;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    public void zUnionAndStore(String key, List<String> otherKeys, String destKey) {
-        redisTemplate.opsForZSet().unionAndStore(key,otherKeys,destKey);
-    }
-
-    /**
-     * 获取有序集 key 中成员 member 的排名 。
-     * 其中有序集成员按 score 值递减 (从大到小) 排序。
-     * @param key
-     * @param start
-     * @param end
-     * @return
-     */
-    public Set<ZSetOperations.TypedTuple> getZSetRank(String key, long start, long end) {
-        return redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end);
-    }
-
-    /**
-     * HashGet
-     *
-     * @param key  键 不能为null
-     * @param item 项 不能为null
-     * @return 值
-     */
-    public Object hget(String key, String item) {
-        return redisTemplate.opsForHash().get(key, item);
-    }
-
-    public void zIncrementScore(String key, Object value, long delta) {
-        redisTemplate.opsForZSet().incrementScore(key,value,delta);
-    }
-
-    /**
-     * 根据key获取Set中的所有值
-     *
-     * @param key 键
-     * @return
-     */
-    public Set<Object> sGet(String key) {
-        try {
-            return redisTemplate.opsForSet().members(key);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * 判断hash表中是否有该项的值
@@ -212,6 +152,20 @@ public class RedisUtils {
      */
     public boolean hHasKey(String key, String item) {
         return redisTemplate.opsForHash().hasKey(key, item);
+    }
+    /**
+     * 判断key是否存在
+     *
+     * @param key 键
+     * @return true 存在 false不存在
+     */
+    public boolean hasKey(String key) {
+        try {
+            return redisTemplate.hasKey(key);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -233,6 +187,55 @@ public class RedisUtils {
     public Map<Object, Object> hmget(String key) {
         return redisTemplate.opsForHash().entries(key);
     }
+
+    /**
+     * 将数据放入set缓存
+     *
+     * @param key    键
+     * @param values 值 可以是多个
+     * @return 成功个数
+     */
+    public long sSet(String key, Object... values) {
+        try {
+            return redisTemplate.opsForSet().add(key, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 移除值为value的
+     *
+     * @param key    键
+     * @param values 值 可以是多个
+     * @return 移除的个数
+     */
+    public long setRemove(String key, Object... values) {
+        try {
+            Long count = redisTemplate.opsForSet().remove(key, values);
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 根据key获取Set中的所有值
+     *
+     * @param key 键
+     * @return
+     */
+    public Set<Object> sGet(String key) {
+        try {
+            return redisTemplate.opsForSet().members(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     /**
      * 将list放入缓存

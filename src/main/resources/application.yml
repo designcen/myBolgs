@@ -1,5 +1,9 @@
 # DataSource Config
 spring:
+  data:
+    elasticsearch:
+      cluster-name: my-application
+      cluster-nodes: localhost:9300
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/my_blogs?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
