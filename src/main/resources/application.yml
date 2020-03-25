@@ -1,31 +1,38 @@
 # DataSource Config
 spring:
-  data:
-    elasticsearch:
-      cluster-name: my-application
-      cluster-nodes: localhost:9300
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/my_blogs?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: root
+  freemarker:
+    request-context-attribute: req  #req访问request
+    suffix: .ftl  #后缀名
+    content-type: text/html
+    enabled: true
+    cache: false #缓存配置
+    template-loader-path: classpath:/templates/ #模板加载路径 按需配置
+    charset: UTF-8 #编码格式
+    settings:
+      number_format: '0.##'   #数字格式化，无小数点
+      classic_compatible: true
   redis:
     host: localhost
     port: 6379
     shrio:
       host: localhost:6379
       database: 1
-  freemarker:
-      request-context-attribute: req  #req访问request
-      suffix: .ftl  #后缀名
-      content-type: text/html
-      enabled: true
-      cache: false #缓存配置
-      template-loader-path: classpath:/templates/ #模板加载路径 按需配置
-      charset: UTF-8 #编码格式
-      settings:
-        number_format: '0.##'   #数字格式化，无小数点
-        classic_compatible: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest
+  data:
+    elasticsearch:
+      cluster-name: my-application
+      cluster-nodes: localhost:9300
+      repositories:
+        enabled: true
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
   configuration:

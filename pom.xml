@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.2.RELEASE</version>
+		<version>2.2.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -39,12 +39,6 @@
 			<version>3.2.2</version>
 		</dependency>
 
-		<dependency>
-			<groupId>net.mingsoft</groupId>
-			<artifactId>shiro-freemarker-tags</artifactId>
-			<version>0.1</version>
-		</dependency>
-
 		<!--验证码-->
 		<dependency>
 			<groupId>com.github.axet</groupId>
@@ -65,11 +59,11 @@
 		</dependency>
 
 		<!-- redission -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.redisson</groupId>
 			<artifactId>redisson-spring-boot-starter</artifactId>
 			<version>3.10.6</version>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -158,7 +152,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
@@ -167,7 +161,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-		</dependency>
+		</dependency>-->
 
 	</dependencies>
 

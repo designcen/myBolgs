@@ -1,5 +1,6 @@
 package com.example.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -47,5 +48,9 @@ public class RabbitMqConfig {
     @Bean
     Binding bindingExchangeMessage(Queue exQueue, DirectExchange exchange) {
         return BindingBuilder.bind(exQueue).to(exchange).with(ES_BIND_KEY);
+    }
+    @Bean
+    ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
