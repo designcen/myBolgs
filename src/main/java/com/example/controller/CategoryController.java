@@ -4,6 +4,7 @@ package com.example.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.vo.PostVo;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author cenkang
  * @since 2019-12-26
  */
-@RestController
+@Controller
 @RequestMapping("/category")
 public class CategoryController extends BaseController {
     /**

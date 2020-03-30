@@ -1,8 +1,6 @@
 <#include "/inc/layout.ftl"/>
 
-<@layout "首页" "fly">
-    <#include "/inc/header-panel.ftl" />
-
+<@layout "首页">
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8 content detail">

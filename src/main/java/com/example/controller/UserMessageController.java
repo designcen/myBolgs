@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserMessageController extends BaseController {
 
     @PostMapping("/nums/")
-    @ResponseBody
     public Object messageNums() {
         int count = userMessageService.count(new QueryWrapper<UserMessage>()
                 .eq("to_user_id",getProfile())

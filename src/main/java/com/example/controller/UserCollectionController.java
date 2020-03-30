@@ -28,7 +28,6 @@ import java.util.Date;
 public class UserCollectionController extends BaseController {
 
     @PostMapping("/find")
-    @ResponseBody
     public Result collectionFind(Long cid){
         int count = userCollectionService.count(new QueryWrapper<UserCollection>()
                 .eq("post_id",cid)
@@ -37,7 +36,6 @@ public class UserCollectionController extends BaseController {
     }
 
     @PostMapping("/add")
-    @ResponseBody
     public Result collectionAdd(long cid){
         Post post = postService.getById(cid);
         Assert.isTrue(post != null,"该帖子已被删除");
@@ -56,7 +54,6 @@ public class UserCollectionController extends BaseController {
     }
 
     @PostMapping("/remove")
-    @ResponseBody
     public Result collectionRemove(Long cid){
         Post post = postService.getById(Long.valueOf(cid));
         Assert.isTrue(post != null,"该帖子已经被删除");

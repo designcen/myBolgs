@@ -13,6 +13,7 @@ import com.example.vo.PostVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,7 @@ import java.util.List;
  * @author cenkang
  * @since 2019-12-26
  */
-@RestController
+@Controller
 @RequestMapping("/post")
 public class PostController extends BaseController {
     @Autowired
@@ -42,7 +43,7 @@ public class PostController extends BaseController {
     public String view(@PathVariable Long id){
         QueryWrapper wrapper = new QueryWrapper<Post>().eq(id != null,"p.id",id);
         PostVo postVo = postService.selectOne(wrapper);
-        Assert.isNull(postVo, "文章已被删除！");
+        Assert.notNull(postVo, "文章已被删除！");
         postService.setViewCount(postVo);
         IPage commentPage = commentService.paging(getPage(),null,id,"id");
         req.setAttribute("post",postVo);

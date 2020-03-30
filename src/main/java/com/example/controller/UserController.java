@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.entity.Post;
 import com.example.entity.User;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * @author cenkang
  * @since 2019-12-26
  */
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController extends BaseController {
 

@@ -1,8 +1,6 @@
 <#include "/inc/layout.ftl"/>
 
 <@layout "首页">
-<#include "/inc/header_panel.ftl" />
-
 <div class="layui-container fly-marginTop">
     <div class="fly-panel" pad20 style="padding-top: 5px;">
         <!--<div class="fly-none">没有权限</div>-->
