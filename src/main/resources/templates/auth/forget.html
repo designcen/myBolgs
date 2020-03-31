@@ -1,0 +1,37 @@
+<div class="fly-panel fly-panel-user" pad20="">
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+        <ul class="layui-tab-title">
+            <li><a href="/user/login/">登入</a></li>
+            <li class="layui-this">找回密码</li>
+        </ul>
+        <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-btn-container" style="margin: 10px 0;">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm">通过邮箱找回</a>
+                    <a href="/user/forget/?type=phone" class="layui-btn layui-btn-sm layui-btn-primary">通过手机找回</a>
+                </div>
+                <div class="layui-form layui-form-pane">
+                    <form method="post">
+                        <div class="layui-form-item"><label for="L_email" class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="L_email" name="email" required="" lay-verify="email" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="L_imagecode" class="layui-form-label">图形码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="L_imagecode" name="imagecode" required="" lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid" style="padding: 0!important;">
+                                <img src="/auth/imagecode?t=1585640178752" class="fly-imagecode">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn" alert="1" lay-filter="*" lay-submit="">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

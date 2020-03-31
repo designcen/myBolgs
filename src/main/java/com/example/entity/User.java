@@ -66,7 +66,7 @@ public class User extends BaseEntity {
     /**
      * vip等级
      */
-    private Integer vipLevel;
+    private int vipLevel;
 
     /**
      * 生日
