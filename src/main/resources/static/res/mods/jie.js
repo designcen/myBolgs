@@ -4,7 +4,7 @@
 
  */
  
-layui.define('fly', function(exports){
+layui.define(['layer','fly','form'], function(exports){
 
   var $ = layui.jquery;
   var layer = layui.layer;
@@ -237,5 +237,5 @@ layui.define('fly', function(exports){
     $('html,body').scrollTop(replyTop);
   }
 
-  exports('jie', null);
+  exports('jie', {});
 });

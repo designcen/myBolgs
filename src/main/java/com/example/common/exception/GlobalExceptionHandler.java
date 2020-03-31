@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
         }
         if (e instanceof MyException){
             // ....
-            System.out.println("=======================================================");
+            System.out.println("======================= 自定义异常 ================================");
         }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("exception",e);

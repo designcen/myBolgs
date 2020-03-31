@@ -4,7 +4,7 @@
 
  */
  
-layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
+layui.define(['layer', 'laypage', 'fly', 'element', 'flow'], function(exports){
 
   var $ = layui.jquery;
   var layer = layui.layer;
@@ -360,6 +360,6 @@ layui.define(['laypage', 'fly', 'element', 'flow'], function(exports){
 
   dom.minemsg[0] && gather.minemsg();
 
-  exports('user', null);
+  exports('user', {});
   
 });

@@ -31,14 +31,18 @@ public class PostsTemplate extends TemplateDirective {
      */
     @Override
     public void execute(DirectiveHandler handler) throws Exception {
+        // 获取导航栏id
         Long categoryId = handler.getLong("categoryId",0);
+        // 获取当页数
         int pn = handler.getInteger("pn",1);
-        int size = handler.getInteger("size",10);
+        // 获取每页数量
+        int size = handler.getInteger("size",5);
         // 排序字段
         String order = handler.getString("order","created");
 
         Page page = new Page(pn,size);
-        IPage results = postService.paging(page,null,categoryId,null,null,order);
+        // 获取置顶帖子
+        IPage results = postService.paging(page,null,categoryId,1,null,order);
         handler.put(RESULTS, results).render();
     }
 }

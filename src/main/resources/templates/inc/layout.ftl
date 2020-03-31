@@ -11,10 +11,15 @@
 
         <link rel="stylesheet" href="${base}/res/layui/css/layui.css">
         <link rel="stylesheet" href="${base}/res/css/global.css">
-    <#-- 全局css\js-->
+        <#-- 全局css\js-->
         <script src="${base}/res/layui/layui.js"></script>
         <script src="${base}/res/js/jquery.min.js"></script>
-        <title>${title?default('个人博客')}</title>
+        <script src="${base}/res/js/stomp.js"></script>
+        <script src="${base}/res/js/sockjs.js"></script>
+        <script src="${base}/res/js/chat.js"></script>
+        <script src="${base}/res/js/im.js"></script>
+        <link href="${base}/res/images/favicon1.ico" rel="icon">
+        <title>${title ? default('个人博客')}</title>
     </head>
     <body>
         <#-- 宏引用-->
@@ -34,10 +39,11 @@
     layui.cache.user = {
         username: '${profile.username!"游客"}'
         , uid: ${profile.id!'-1'}
-        , avatar: '${profile.avatar!"/res/images/avatar/00.jpg"}'
+        , avatar: '${profile.avatar!"/res/images/avatar/0.jpg"}'
         , experience: 0
         , sex: '${profile.sex!'未知'}'
     };
+
     layui.config({
         version: "3.0.0"
         , base: '/res/mods/'
@@ -47,6 +53,26 @@
 </script>
 
 <script>
+    $(function () {
+        var elemUser = $('.fly-nav-user');
+        if (layui.cache.user.uid !== -1 && elemUser[0]) {
+            // 建立端点链接
+            var socket = new SockJS("/websocket");
+            // 切换成stomp文本传输协议传输内容
+            stompClient = Stomp.over(socket);
+            // 建立连接触发的方法
+            stompClient.connect({}, function (frame) {
+                // subscribe订阅这个消息队列
+                // 当后端往/user/{userId}/messCount里面发送消息时候，当前用户就能接收到消息
+                stompClient.subscribe('/user/' + ${profile.id} +'/messCount', function (res) {
+                    // 渲染新消息通知的样式
+                    // res.body是返回的内容
+                    showTips(res.body);
+                })
+            })
+        }
+    });
+
     function showTips(count) {
         var msg = $('<a class="fly-nav-msg" href="javascript:;">' + count + '</a>');
 
@@ -64,48 +90,5 @@
             layer.closeAll('tips');
         })
     }
-
-    $(function () {
-        var elemUser = $('.fly-nav-user');
-
-        if (layui.cache.user.uid !== -1 && elemUser[0]) {
-            // 建立端点链接
-            var socket = new SockJS("/websocket");
-            // 切换成stomp文本传输协议传输内容
-            stompClient = Stomp.over(socket);
-            // 建立连接触发的方法
-            stompClient.connect({}, function (frame) {
-                //subscribe订阅这个消息队列
-                // 当后端往/user/{userId}/messCount里面发送消息时候，当前用户就能接收到消息
-                stompClient.subscribe('/user/' + ${profile.id} +'/messCount', function (res) {
-                    // 渲染新消息通知的样式
-                    // res.body是返回的内容
-                    showTips(res.body);
-                })
-            })
-        }
-    });
 </script>
-
-<script src="/res/js/chat.js"></script>
-<script src="/res/js/im.js"></script>
-
-<#--<script type="application/javascript">-->
-<#--$(function () {-->
-<#--layui.use('layim', function(layim){-->
-<#--//先来个客服模式压压精-->
-<#--layim.config({-->
-<#--brief: true //是否简约模式（如果true则不显示主面板）-->
-<#--,min: true-->
-<#--}).chat({-->
-<#--name: '客服姐姐'-->
-<#--,type: 'friend'-->
-<#--,avatar: 'http://tp1.sinaimg.cn/5619439268/180/40030060651/1'-->
-<#--,id: -2-->
-<#--});-->
-
-<#--layim.setChatMin(); //收缩聊天面板-->
-<#--});-->
-<#--});-->
-<#--</script>-->
 </#macro>

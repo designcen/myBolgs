@@ -57,9 +57,10 @@ public class ShiroConfig {
 
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
         filterFactoryBean.setSecurityManager(securityManager);
-        // 配置登录的url和登录成功的url
+        // 配置登录的url
         filterFactoryBean.setLoginUrl("/login");
-        filterFactoryBean.setSuccessUrl("/user/center");
+        // 登录成功的url
+        filterFactoryBean.setSuccessUrl("/index");
         // 配置未授权跳转页面
         filterFactoryBean.setUnauthorizedUrl("/error/403");
 
@@ -69,6 +70,7 @@ public class ShiroConfig {
         filterFactoryBean.setFilters(filterMap);
 
         Map<String, String> hashMap = new LinkedHashMap<>();
+        // anon:不需要验证，auth：需要验证，roles[admin]：需要admin权限
         hashMap.put("/login", "anon");
         hashMap.put("/post/edit", "auth");
         hashMap.put("/post/delete/", "auth");

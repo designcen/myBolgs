@@ -1,5 +1,5 @@
 <#include "/inc/layout.ftl"/>
-<@layout "首页">
+<@layout "个人博客">
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
@@ -34,8 +34,6 @@
             </div>
 
         </div>
-        <!--侧边栏的签到等-->
-        <#include "/inc/right.ftl" />
     </div>
 </div>
 </@layout>

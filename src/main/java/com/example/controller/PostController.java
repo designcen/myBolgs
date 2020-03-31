@@ -28,6 +28,8 @@ import java.util.List;
  * @author cenkang
  * @since 2019-12-26
  */
+// 把@RestController替换为@Controller注解
+// @RestController注解表示返回的内容都是HTTP Content不会被模版引擎处理的
 @Controller
 @RequestMapping("/post")
 public class PostController extends BaseController {

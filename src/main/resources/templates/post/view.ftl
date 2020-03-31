@@ -138,8 +138,6 @@
                 </div>
             </div>
         </div>
-
-        <#include "/inc/right.ftl" />
     </div>
 </div>
 
