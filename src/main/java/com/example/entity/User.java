@@ -68,10 +68,6 @@ public class User extends BaseEntity {
      */
     private Integer vipLevel;
 
-    public Integer getVipLevel() {
-        return vipLevel == null ? 0 : vipLevel;
-    }
-
     /**
      * 生日
      */
