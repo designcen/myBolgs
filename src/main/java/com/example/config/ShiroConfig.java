@@ -96,20 +96,8 @@ public class ShiroConfig {
      *
      * @return 返回redis管理对象
      */
-    @Bean
-    public RedisManager redisManager() {
-        RedisManager redisManager = new RedisManager();
-        redisManager.setHost(host);
-        redisManager.setDatabase(database);
-        return redisManager;
-    }
 
-    @Bean
-    RedisSessionDAO redisSessionDAO() {
-        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
-        redisSessionDAO.setRedisManager(redisManager());
-        return redisSessionDAO;
-    }
+
 
     @Bean
     DefaultWebSessionManager sessionManager(RedisSessionDAO redisSessionDAO) {
@@ -129,4 +117,18 @@ public class ShiroConfig {
         return redisCacheManager;
     }
 
+    @Bean
+    RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        return redisSessionDAO;
+    }
+
+    @Bean
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost(host);
+        redisManager.setDatabase(database);
+        return redisManager;
+    }
 }

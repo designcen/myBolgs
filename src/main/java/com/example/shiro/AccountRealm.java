@@ -24,15 +24,16 @@ public class AccountRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         AccountProfile principal = (AccountProfile) principalCollection.getPrimaryPrincipal();
-
-        // 硬编码
-        if(principal.getUsername().equals("admin") || principal.getId() == 1){
-            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        SimpleAuthorizationInfo info = null;
+        // 根据博客项目的业务需要，只需要有一个管理员角色即可，所以本项目为了节省开发时间，省去了角色的维护，管理员是操作数据库得到的
+        // 由于本项目只有无角色和admin角色两个角色，所以省去角色配置，此处采用硬编码设置角色
+        // 规定昵称为admin且id为1的用户为管理员
+        if(principal.getUsername().equals("admin") && principal.getId() == 1){
+            info = new SimpleAuthorizationInfo();
             info.addRole("admin");
-            return info;
         }
 
-        return null;
+        return info;
     }
 
     @Override
