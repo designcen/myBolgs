@@ -30,6 +30,9 @@ public class Category extends BaseEntity {
      */
     private String content;
 
+    /**
+     * 摘要信息
+     */
     private String summary;
 
     /**

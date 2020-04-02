@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.lang.Result;
 import com.example.entity.*;
 import com.example.shiro.AccountProfile;
+import com.example.vo.CollectionVo;
 import com.example.vo.MessageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -49,7 +50,7 @@ public class CenterController extends BaseController {
         QueryWrapper queryWrapper = new QueryWrapper<>()
                 .eq("u.user_id",getProfileId())
                 .orderByDesc("created");
-        IPage<Post> pageData = userCollectionService.paging(page,queryWrapper);
+        IPage<CollectionVo> pageData = userCollectionService.paging(page,queryWrapper);
         req.setAttribute("pageData",pageData);
         return "center/collection";
     }

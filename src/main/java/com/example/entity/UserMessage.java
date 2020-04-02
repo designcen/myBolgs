@@ -40,6 +40,9 @@ public class UserMessage extends BaseEntity {
      */
     private Long commentId;
 
+    /**
+     * 消息内容
+     */
     private String content;
 
     /**

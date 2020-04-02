@@ -20,10 +20,19 @@ public class UserCollection extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 当前用户的id
+     */
     private Long userId;
 
+    /**
+     * 帖子（文章）id
+     */
     private Long postId;
 
+    /**
+     * 帖子（文章）作者id
+     */
     private Long postUserId;
 
 

@@ -3,9 +3,9 @@ package com.example.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.entity.Post;
 import com.example.entity.UserCollection;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.vo.CollectionVo;
 
 /**
  * <p>
@@ -17,5 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface UserCollectionService extends IService<UserCollection> {
 
-    IPage<Post> paging(Page page, QueryWrapper queryWrapper);
+    IPage<CollectionVo> paging(Page page, QueryWrapper queryWrapper);
 }
