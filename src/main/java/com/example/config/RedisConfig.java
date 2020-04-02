@@ -63,7 +63,10 @@ public class RedisConfig {
 
     }
 
-
+    /**
+     * 缓存配置
+     * @return
+     */
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();

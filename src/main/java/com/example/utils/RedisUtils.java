@@ -127,7 +127,7 @@ public class RedisUtils {
     }
 
     /**
-     * HashSet
+     * Hash
      *
      * @param key 键
      * @param map 对应多个键值

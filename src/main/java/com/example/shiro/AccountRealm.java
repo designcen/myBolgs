@@ -42,7 +42,7 @@ public class AccountRealm extends AuthorizingRealm {
         // 注意token.getUsername()是指email
         AccountProfile profile = userService.login(token.getUsername(),String.valueOf(token.getPassword()));
         log.info("======================================>进入认证步骤");
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(profile,token.getCredentials(),getName());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(profile,token.getCredentials(),this.getName());
         return info;
     }
 }

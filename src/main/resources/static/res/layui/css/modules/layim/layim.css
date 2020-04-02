@@ -242,7 +242,7 @@ body .layui-layim-contextmenu  .layui-layer-content{padding:0; background-color:
 .layim-tab-content,
 .layui-layim-face ul{margin-bottom: 0;}
 .layim-tab-content li h5{margin-top: 0; margin-bottom: 0;}
-,.layui-layim-face img{vertical-align: bottom;}
+.layui-layim-face img{vertical-align: bottom;}
 .layim-chat-other span{color: #444;}
 .layim-chat-other span cite{padding: 0 15px; color: #999;}
 .layim-chat-other:hover{text-decoration: none;}

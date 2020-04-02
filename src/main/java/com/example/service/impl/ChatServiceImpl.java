@@ -9,15 +9,14 @@ import com.example.im.vo.ImUser;
 import com.example.service.ChatService;
 import com.example.shiro.AccountProfile;
 import com.example.utils.RedisUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tio.http.common.HttpRequest;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * @author cenkang
@@ -30,11 +29,23 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ImUser getCurrentImUser() {
-        AccountProfile profile = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
+        Object o = SecurityUtils.getSubject().getPrincipal();
         ImUser user = new ImUser();
-
-        if(profile != null) {
+        if(o != null) {
+        AccountProfile profile = new AccountProfile();
+            try {
+                // 虽然o与profile是同一个对象，但是此处没有用向下转型，
+                // 原因是：本项目中使用了热部署spring-boot-devtools包，
+                // 导致同一个类使用了不同了类加载器从而不能识别是同一个类
+                // 拓展：devtools默认会对IDE中引入的所有项目使用restart类加载器，对于引入的jar包使用base类加载器。
+                PropertyUtils.copyProperties(profile,o);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
             user.setId(profile.getId());
             user.setAvatar(profile.getAvatar());
             user.setUsername(profile.getUsername());
@@ -110,12 +121,14 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void setGroupHistoryMsg(ImMess imMess) {
+        // 将对象转json格式存入redis中的list结构中
         redisUtils.lSet(Constant.IM_GROUP_HISTROY_MSG_KEY, imMess, 24 * 60 * 60);
     }
 
     @Override
     public List<Object> getGroupHistoryMsg(int count) {
         long length = redisUtils.lGetListSize(Constant.IM_GROUP_HISTROY_MSG_KEY);
+        // 将list中的对象（json格式）转成linkedHashMap格式取出来
         return redisUtils.lGet(Constant.IM_GROUP_HISTROY_MSG_KEY, length - count < 0 ? 0 : length - count, length);
     }
 }

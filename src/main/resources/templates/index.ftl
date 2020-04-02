@@ -18,22 +18,20 @@
                         <a href="">按热议</a>
                     </span>
                 </div>
-
-                <#-- 文章信息，标题，阅读量等 -->
+            <#-- 文章信息，标题，阅读量等 -->
                 <ul class="fly-list">
                    <#list pageData.records as post>
                        <@listing post></@listing>
                    </#list>
                 </ul>
-
                 <div style="text-align: center">
-                    <#-- 分页 -->
+                <#-- 分页 -->
                     <@page pageData></@page>
                 </div>
-
             </div>
-
         </div>
+        <!--侧边栏的签到等-->
+        <#include "/inc/right.ftl" />
     </div>
 </div>
 </@layout>

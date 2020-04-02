@@ -21,6 +21,10 @@ public class AccountProfile implements Serializable {
     private Date lasted;
     private Integer vipLevel;
 
+    public Integer getVipLevel() {
+        return vipLevel == null ? Integer.valueOf(0) : vipLevel;
+    }
+
     public String getSex(){
         if(this.getGender() == null) return null;
         return this.getGender().equals("0") ? "男" : "女";

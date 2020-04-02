@@ -36,6 +36,8 @@
             </div>
 
         </div>
+        <!--侧边栏的签到等-->
+        <#include "/inc/right.ftl" />
     </div>
 </div>
 </@layout>
