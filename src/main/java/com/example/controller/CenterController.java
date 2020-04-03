@@ -32,18 +32,6 @@ import java.util.Date;
 @RequestMapping("/center")
 public class CenterController extends BaseController {
 
-    @GetMapping("")
-    public String index(){
-        Page page = getPage();
-        log.info("====================>进入个人中心");
-        QueryWrapper<Post> wrapper = new QueryWrapper<Post>()
-                .eq("user_id",getProfileId())
-                .orderByDesc("created");
-        IPage<Post> pageData = postService.page(page,wrapper);
-        req.setAttribute("pageData",pageData);
-        return "center/index";
-    }
-
     @GetMapping("/collection")
     public String collection(){
         Page page = getPage();

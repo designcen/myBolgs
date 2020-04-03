@@ -1,6 +1,6 @@
 <#include "/inc/layout.ftl"/>
 
-<@layout "用户主页">
+<@layout "我的主页">
 
 <div class="fly-home fly-panel" style="background-image: url();">
     <img src="${user.avatar!}" alt="${user.username!}">

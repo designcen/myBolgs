@@ -1,12 +1,12 @@
 <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
     <li class="layui-nav-item">
-        <a href="home.html">
+        <a href="/user/<@shiro.principal property='id'/>">
             <i class="layui-icon">&#xe609;</i>
             我的主页
         </a>
     </li>
     <li class="layui-nav-item layui-this">
-        <a href="index.html">
+        <a href="/user/index">
             <i class="layui-icon">&#xe612;</i>
             用户中心
         </a>

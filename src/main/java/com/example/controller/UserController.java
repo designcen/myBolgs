@@ -9,7 +9,9 @@ import com.example.entity.Post;
 import com.example.entity.User;
 import com.example.entity.UserCollection;
 import com.example.shiro.AccountProfile;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,10 +26,10 @@ import java.util.List;
  * @author cenkang
  * @since 2019-12-26
  */
+@Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController extends BaseController {
-
     /**
      * 跳转用户主页
      * @param id 用户id
@@ -53,7 +55,7 @@ public class UserController extends BaseController {
      * 跳转到用户中心并展示当前用户所有的发帖（文章）
      * @return
      */
-    @RequestMapping("/index")
+    @GetMapping("")
     public String index(){
         // 获取当前shiro中的用户
         AccountProfile suser = getProfile();

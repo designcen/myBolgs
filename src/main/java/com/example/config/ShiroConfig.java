@@ -79,7 +79,7 @@ public class ShiroConfig {
         hashMap.put("/post/jieda-delete", "auth");
         hashMap.put("/collection/find/", "auth");
         hashMap.put("/admin/**", "auth, roles[admin]");
-        hashMap.put("/center/**", "auth");
+        hashMap.put("/user/**", "auth");
         filterFactoryBean.setFilterChainDefinitionMap(hashMap);
 
         return filterFactoryBean;
