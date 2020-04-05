@@ -26,8 +26,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/chat")
 public class ChatController extends BaseController{
-    @Autowired
-    ChatService chatService;
 
     @GetMapping("/getMineAndGroupData")
     public Result getMineAndGroupData(HttpServletRequest request) {

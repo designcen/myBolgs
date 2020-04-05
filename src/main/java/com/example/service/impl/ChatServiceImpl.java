@@ -8,14 +8,13 @@ import com.example.im.vo.ImMess;
 import com.example.im.vo.ImUser;
 import com.example.service.ChatService;
 import com.example.shiro.AccountProfile;
+import com.example.utils.CommonUtils;
 import com.example.utils.RedisUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tio.http.common.HttpRequest;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -31,21 +30,13 @@ public class ChatServiceImpl implements ChatService {
     public ImUser getCurrentImUser() {
         Object o = SecurityUtils.getSubject().getPrincipal();
         ImUser user = new ImUser();
-        if(o != null) {
-        AccountProfile profile = new AccountProfile();
-            try {
+        if (o != null) {
+            AccountProfile profile = new AccountProfile();
                 // 虽然o与profile是同一个对象，但是此处没有用向下转型，
                 // 原因是：本项目中使用了热部署spring-boot-devtools包，
                 // 导致同一个类使用了不同了类加载器从而不能识别是同一个类
                 // 拓展：devtools默认会对IDE中引入的所有项目使用restart类加载器，对于引入的jar包使用base类加载器。
-                PropertyUtils.copyProperties(profile,o);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+            CommonUtils.copyProperties(profile,o);
             user.setId(profile.getId());
             user.setAvatar(profile.getAvatar());
             user.setUsername(profile.getUsername());
@@ -86,7 +77,7 @@ public class ChatServiceImpl implements ChatService {
         Set<Object> ids = redisUtils.sGet(Constant.IM_ONLINE_MEMBERS_KEY);
 
         Set<Object> results = new HashSet<>();
-        if(ids == null) return results;
+        if (ids == null) return results;
 
         ids.forEach((id) -> {
 
@@ -105,7 +96,7 @@ public class ChatServiceImpl implements ChatService {
         String avatar = httpRequest.getParam("avatar");
 
 
-        Map<String, Object> member = MapUtil.builder("id", (Object)userId)
+        Map<String, Object> member = MapUtil.builder("id", (Object) userId)
                 .put("username", username)
                 .put("avatar", avatar)
                 .map();
