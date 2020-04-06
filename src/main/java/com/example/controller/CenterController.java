@@ -32,24 +32,6 @@ import java.util.Date;
 @RequestMapping("/center")
 public class CenterController extends BaseController {
 
-    @GetMapping("/collection")
-    public String collection(){
-        Page page = getPage();
-        QueryWrapper queryWrapper = new QueryWrapper<>()
-                .eq("u.user_id",getProfileId())
-                .orderByDesc("created");
-        IPage<CollectionVo> pageData = userCollectionService.paging(page,queryWrapper);
-        req.setAttribute("pageData",pageData);
-        return "center/collection";
-    }
-    @GetMapping("/setting")
-    public String setting(){
-        User user = userService.getById(getProfileId());
-        user.setPassword(null);
-        req.setAttribute("user",user);
-        return "center/setting";
-    }
-
     @PostMapping("/setting")
     @ResponseBody
     public Result postSetting(User user){
@@ -115,21 +97,6 @@ public class CenterController extends BaseController {
         return Result.succ(null);
     }
 
-    @PostMapping("/repass")
-    @ResponseBody
-    public Result repass(String oldPass,String newPass,String reNewPass){
-        if (!newPass.equals(reNewPass)) {
-            return Result.fail("两次密码不一致");
-        }
-        User user = userService.getById(getProfileId());
-        String oldPassMd5 = SecureUtil.md5(oldPass);
-        if (!oldPassMd5.equals(user.getPassword())) {
-            return Result.fail("原密码不正确");
-        }
-        user.setPassword(SecureUtil.md5(newPass));
-        userService.updateById(user);
-        return Result.succ("更新成功",null,"/center/setting");
-    }
 
     @GetMapping("/message")
     public String message(){

@@ -11,6 +11,7 @@ import com.example.entity.Post;
 import com.example.entity.UserCollection;
 import com.example.vo.CollectionVo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,26 +31,6 @@ import java.util.Date;
 @RequestMapping("/collection")
 public class UserCollectionController extends BaseController {
 
-    /**
-     * 查询我收藏的帖子（文章）
-     * @param
-     * @return
-     */
-    @RequestMapping("/find")
-    public String collectionFind(){
-        // 获取分页
-        Page page = getPage();
-        // 获取当前用户收藏的文章
-        IPage<CollectionVo> collectionList = userCollectionService.paging(page,new QueryWrapper<UserCollection>().eq("u.user_id",getProfileId()));
-        // 获取收藏数量
-        int collectionCount = userCollectionService.count(new QueryWrapper<UserCollection>().eq("user_id",getProfileId()));
-        // 获取发帖（文章）数量
-        int postCount = postService.count(new QueryWrapper<Post>().eq("user_id",getProfileId()));
-        req.setAttribute("pageData",collectionList);
-        req.setAttribute("collectionCount",collectionCount);
-        req.setAttribute("postCount",postCount);
-        return "user/find";
-    }
 
     @PostMapping("/add")
     @ResponseBody

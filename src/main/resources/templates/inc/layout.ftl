@@ -46,10 +46,10 @@
 
     layui.config({
         version: "3.0.0"
-        , base: '/res/mods/'
+        , base: '/res/mods/'   //存放新模块的目录，注意，不是layui的模块目录
     }).extend({
         fly: 'index'
-    }).use('fly').use('jie').use('user');
+    }).use('fly').use('jie').use('user'); //加载入口
 </script>
 
 <script>

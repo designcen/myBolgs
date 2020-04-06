@@ -1,7 +1,7 @@
 <#include "/inc/layout.ftl"/>
 <@layout "用户中心">
 <div class="layui-container fly-marginTop fly-user-main">
-    <#include "/inc/user/right.ftl" />
+    <@centerBanner 1></@centerBanner>
 
     <div class="fly-panel fly-panel-user" pad20>
         <div class="layui-tab layui-tab-brief" lay-filter="user">

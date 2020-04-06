@@ -9,19 +9,19 @@
         </a>
     </li>
     <li class="layui-nav-item <#if level==1>layui-this</#if>">
-        <a href="${base}/center">
+        <a href="${base}/user/index">
             <i class="layui-icon">&#xe612;</i>
             用户中心
         </a>
     </li>
     <li class="layui-nav-item <#if level==2>layui-this</#if>">
-        <a href="${base}/center/setting">
+        <a href="${base}/user/set">
             <i class="layui-icon">&#xe620;</i>
             基本设置
         </a>
     </li>
     <li class="layui-nav-item <#if level==3>layui-this</#if>">
-        <a href="${base}/center/message">
+        <a href="${base}/user/message">
             <i class="layui-icon">&#xe611;</i>
             我的消息
         </a>

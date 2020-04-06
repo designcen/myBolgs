@@ -23,14 +23,14 @@
         <i class="iconfont icon-chengshi"></i><span>${user.city!}</span>
     </p>
 
-    <p class="fly-home-sign">（${user.sign!}）</p>
+    <p class="fly-home-sign">${user.sign!}</p>
 </div>
 
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md6 fly-home-jie">
             <div class="fly-panel">
-                <h2 class="fly-panel-title">${user.username} 最近30天发表的文章</h2>
+                <h2 class="fly-panel-title">最近30天发表的文章</h2>
                 <ul class="jie-row">
                     <#if posts?? && (posts?size > 0) >
                         <#list posts as post>
@@ -55,7 +55,7 @@
     <#--请自行完成-->
         <div class="layui-col-md6 fly-home-da">
             <div class="fly-panel">
-                <h3 class="fly-panel-title">贤心 最近的回答</h3>
+                <h3 class="fly-panel-title">最近的回答</h3>
                 <ul class="home-jieda">
                     <li>
                         <p>

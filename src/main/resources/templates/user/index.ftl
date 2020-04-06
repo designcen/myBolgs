@@ -1,13 +1,13 @@
 <#include "/inc/layout.ftl"/>
 <@layout "用户中心">
 <div class="layui-container fly-marginTop fly-user-main">
-<#include "/inc/user/left.ftl" />
+    <@centerBanner 1></@centerBanner>
 
     <div class="fly-panel fly-panel-user" pad20>
         <div class="layui-tab layui-tab-brief" lay-filter="user">
             <ul class="layui-tab-title" id="LAY_mine">
                 <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span>${postCount!}</span>）</li>
-                <li data-type="collection" lay-id="collection"><a href="/collection/find">我收藏的帖（<span>${collectionCount!}</span>）</a></li>
+                <li data-type="collection" lay-id="collection"><a href="/user/find">我收藏的帖（<span>${collectionCount!}</span>）</a></li>
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
                 <div class="layui-tab-item">
