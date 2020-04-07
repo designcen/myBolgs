@@ -7,11 +7,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.lang.Result;
+import com.example.entity.Comment;
 import com.example.entity.Post;
 import com.example.entity.User;
 import com.example.entity.UserCollection;
 import com.example.shiro.AccountProfile;
 import com.example.vo.CollectionVo;
+import com.example.vo.CommentVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/user")
 public class UserController extends BaseController {
+
     /**
      * 跳转用户主页，可能需要查看他人的主页，所以此处需要有用户对应的id
      * @param id 用户id
@@ -46,9 +49,15 @@ public class UserController extends BaseController {
         .eq("user_id",id)
         .ge("created",date30Before)
         .orderByDesc("created"));
-
+        Date time24Before = DateUtil.offsetHour(new Date(),-24).toJdkDate();
+        // 最近24小时的评论
+        IPage<CommentVo> commentList = commentService.getLateComment(getPage(),new QueryWrapper<Comment>()
+                .eq("c.user_id",id)
+                .ge("c.created",time24Before)
+                .orderByDesc("c.created"));
         req.setAttribute("user",user);
         req.setAttribute("posts",posts);
+        req.setAttribute("pageData",commentList);
         return "user/home";
     }
 
@@ -60,8 +69,6 @@ public class UserController extends BaseController {
     public String index(){
         // 获取当前shiro中的用户
         AccountProfile suser = getProfile();
-        // 获取分页
-        Page page = getPage();
         // 分页获取当前用户的所有文章
         IPage postAll = postService.paging(getPage(), suser.getId(), null, suser.getVipLevel(), null, "created");
         // 获取收藏数量

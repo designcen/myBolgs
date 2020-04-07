@@ -18,7 +18,7 @@
                                     <span class="fly-jing">精</span>
                                 </#if>
                                 <a href="${base}/post/${post.id}" class="jie-title"> ${post.title}</a>
-                                <i>${post.created?date('yyyy-MM-dd')}</i>
+                                <i>${post.created?string('yyyy-MM-dd')}</i>
                                 <em class="layui-hide-xs">${post.viewCount}阅/${post.commentCount}答</em>
                             </li>
                         </#list>

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ *  评论&回复服务实现类
  * </p>
  *
  * @author cenkang
@@ -32,5 +32,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .eq(postId != null,"c.post_id",postId);
         IPage<CommentVo> pageData = commentMapper.selectComments(page,wrapper);
         return pageData;
+    }
+
+    @Override
+    public IPage<CommentVo> getLateComment(Page page,QueryWrapper<Comment> queryWrapper) {
+        return commentMapper.selectComments(page,queryWrapper);
     }
 }

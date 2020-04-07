@@ -19,7 +19,7 @@
                                         <select lay-verify="required" name="categoryId" lay-filter="column">
                                             <option></option>
                                             <#list categories as category>
-                                                <option value="${category.id}" <#if category.id == post.categoryId>selected</#if> >${category.name}</option>
+                                                <option value="${category.id!}" <#if category.id == post.categoryId>selected</#if> >${category.name}</option>
                                             </#list>
                                         </select>
                                     </div>
@@ -27,8 +27,8 @@
                                 <div class="layui-col-md9">
                                     <label for="L_title" class="layui-form-label">标题</label>
                                     <div class="layui-input-block">
-                                        <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input" value="${post.title}">
-                                        <input type="hidden" name="id" value="${post.id}">
+                                        <input type="text" id="L_title" name="title" required lay-verify="required" autocomplete="off" class="layui-input" value="${post.title!}">
+                                        <input type="hidden" name="id" value="${post.id!}">
                                     </div>
                                 </div>
                             </div>
@@ -61,31 +61,22 @@
                             </div>
                             <div class="layui-form-item layui-form-text">
                                 <div class="layui-input-block">
-                                    <textarea id="L_content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;">${post.content}</textarea>
+                                    <textarea id="L_content" name="content" required lay-verify="required" placeholder="详细描述" class="layui-textarea fly-editor" style="height: 260px;">${post.content!}</textarea>
                                 </div>
                             </div>
-                            <#--<div class="layui-form-item">-->
-                                <#--<div class="layui-inline">-->
-                                    <#--<label class="layui-form-label">悬赏飞吻</label>-->
-                                    <#--<div class="layui-input-inline" style="width: 190px;">-->
-                                        <#--<select name="experience">-->
-                                            <#--<option value="20">20</option>-->
-                                            <#--<option value="30">30</option>-->
-                                            <#--<option value="50">50</option>-->
-                                            <#--<option value="60">60</option>-->
-                                            <#--<option value="80">80</option>-->
-                                        <#--</select>-->
-                                    <#--</div>-->
-                                    <#--<div class="layui-form-mid layui-word-aux">发表后无法更改飞吻</div>-->
-                                <#--</div>-->
-                            <#--</div>-->
                             <div class="layui-form-item">
-                                <label for="L_vercode" class="layui-form-label">人类验证</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请回答后面的问题" autocomplete="off" class="layui-input">
-                                </div>
-                                <div class="layui-form-mid">
-                                    <span style="color: #c00;">1+1=?</span>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">悬赏飞吻</label>
+                                    <div class="layui-input-inline" style="width: 190px;">
+                                        <select name="experience">
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="60">60</option>
+                                            <option value="80">80</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">发表后无法更改飞吻</div>
                                 </div>
                             </div>
                             <div class="layui-form-item">

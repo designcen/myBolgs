@@ -5,10 +5,12 @@ import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.lang.Result;
 import com.example.config.RabbitMqConfig;
 import com.example.entity.*;
 import com.example.search.common.PostMqIndexMessage;
+import com.example.shiro.AccountProfile;
 import com.example.vo.PostVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -187,11 +189,9 @@ public class PostController extends BaseController {
     @PostMapping("/submit")
     @Transactional
     @ResponseBody
-    public Result submit(@Valid Post post, BindingResult bindingResult, String vercode) throws JsonProcessingException {
-        // 后期改正，此处应该是页面验证码
-        if (!"2".equals(vercode)) {
-            return Result.fail("验证码错误");
-        }
+    public Result submit(@Valid Post post, BindingResult bindingResult) throws JsonProcessingException {
+        // 获取当前shiro中的用户
+        AccountProfile suser = getProfile();
         // bindingResult.hasErrors()是判断提交的post是否符合验证逻辑的
         if (bindingResult.hasErrors()) {
             return  Result.fail(bindingResult.getFieldError().getDefaultMessage());
@@ -215,10 +215,21 @@ public class PostController extends BaseController {
             type = PostMqIndexMessage.UPDATE;
         }
         postService.saveOrUpdate(post);
+        // 获取当前用户的第一页缓存
+        IPage postAll = postService.paging(new Page(1, 10), suser.getId(), null, suser.getVipLevel(), null, "created");
+        if (postAll.getRecords() == null || postAll.getRecords().size() < 11) {
 
-        //发送异步消息更新ES
+        }
+        // 发送异步消息更新ES
         amqpTemplate.convertAndSend(RabbitMqConfig.ES_EXCHANGE, RabbitMqConfig.ES_BIND_KEY,
                 objectMapper.writeValueAsString(new PostMqIndexMessage(post.getId(), type)));
         return Result.succ("发布成功",null,"/post/" + post.getId());
+    }
+
+    @GetMapping("/add")
+    public String add(){
+        List<Category> categories = categoryService.list();
+        req.setAttribute("categories",categories);
+        return "post/edit";
     }
 }

@@ -7,9 +7,11 @@
          u.id as authorId,
          u.username as authorName,
          u.avatar as authorAvatar,
-         u.vip_level as authorVip
+         u.vip_level as authorVip,
+         p.title as title
         from comment c
         left join user u on c.user_id = u.id
+        left join post p on p.id = c.post_id
         ${ew.customSqlSegment}
     </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.example.shiro;
 
 import com.example.service.UserService;
+import com.example.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -23,7 +24,9 @@ public class AccountRealm extends AuthorizingRealm {
     UserService userService;
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        AccountProfile principal = (AccountProfile) principalCollection.getPrimaryPrincipal();
+        AccountProfile principal = new AccountProfile();
+        // 没有直接向下转型，原因是devtools类加载器与IDE的不同
+        CommonUtils.copyProperties(principal,principalCollection.getPrimaryPrincipal());
         SimpleAuthorizationInfo info = null;
         // 根据博客项目的业务需要，只需要有一个管理员角色即可，所以本项目为了节省开发时间，省去了角色的维护，管理员是操作数据库得到的
         // 由于本项目只有无角色和admin角色两个角色，所以省去角色配置，此处采用硬编码设置角色

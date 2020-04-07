@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * 评论&回复
  * </p>
  *
  * @author cenkang
@@ -31,7 +31,7 @@ public class Comment extends BaseEntity {
     private Long parentId;
 
     /**
-     * 评论的内容ID
+     * 评论的文章ID
      */
     private Long postId;
 

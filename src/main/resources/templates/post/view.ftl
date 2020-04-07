@@ -94,7 +94,7 @@
                                 </div>
 
                                 <div class="detail-hits">
-                                    <span>${comment.created?string('yyyy-MM-dd')}</span>
+                                    <span>${comment.created?string('yyyy-MM-dd HH:mm:ss')}</span>
                                 </div>
 
                             <#--<i class="iconfont icon-caina" title="最佳答案"></i>-->
