@@ -22,5 +22,11 @@
             <span class="fly-search"><i class="layui-icon"></i></span>
             <a href="/post/add" class="layui-btn">发表新帖</a>
         </div>
+        <@shiro.hasRole name="admin">
+            <div class="fly-column-right layui-hide-xs">
+                <span class="fly-search"><i class="layui-icon"></i></span>
+                <a href="/admin/addCategory" class="layui-btn">添加专栏</a>
+            </div>
+        </@shiro.hasRole>
     </div>
 </div>

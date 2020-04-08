@@ -38,7 +38,7 @@ layui.define(['layer','fly','form'], function(exports){
   });
 
   //提交回答
-  fly.form['/jie/reply/'] = function(data, required){
+  fly.form['/post/reply/'] = function(data, required){
     var tpl = '<li>\
       <div class="detail-about detail-about-reply">\
         <a class="fly-avatar" href="/u/{{ layui.cache.user.uid }}" target="_blank">\
@@ -69,8 +69,7 @@ layui.define(['layer','fly','form'], function(exports){
       dom.jiedaCount.html(++count);
     });
   };
-
-  //求解管理
+  /*---------------------------------------------- 求解管理 start-----------------------------------------------------------------*/
   gather.jieAdmin = {
     //删求解
     del: function(div){
@@ -87,7 +86,7 @@ layui.define(['layer','fly','form'], function(exports){
         });
       });
     }
-    
+
     //设置置顶、状态
     ,set: function(div){
       var othis = $(this);
@@ -102,7 +101,7 @@ layui.define(['layer','fly','form'], function(exports){
       });
     }
 
-    //收藏
+    //收藏 √
     ,collect: function(div){
       var othis = $(this), type = othis.data('type');
       fly.json('/collection/'+ type +'/', {
@@ -116,6 +115,7 @@ layui.define(['layer','fly','form'], function(exports){
       });
     }
   };
+  /*---------------------------------------------- 求解管理 end-----------------------------------------------------------------*/
 
   $('body').on('click', '.jie-admin', function(){
     var othis = $(this), type = othis.attr('type');
@@ -135,11 +135,11 @@ layui.define(['layer','fly','form'], function(exports){
     }
   }();
 
-  //解答操作
+  /*---------------------------------------------- 解答操作 start-----------------------------------------------------------------*/
   gather.jiedaActive = {
     zan: function(li){ //赞
       var othis = $(this), ok = othis.hasClass('zanok');
-      fly.json('/api/jieda-zan/', {
+      fly.json('/user/jieda-zan/', {
         ok: ok
         ,id: li.data('id')
       }, function(res){
@@ -224,6 +224,7 @@ layui.define(['layer','fly','form'], function(exports){
       });    
     }
   };
+    /*---------------------------------------------- 解答操作 end-----------------------------------------------------------------*/
 
   $('.jieda-reply span').on('click', function(){
     var othis = $(this), type = othis.attr('type');

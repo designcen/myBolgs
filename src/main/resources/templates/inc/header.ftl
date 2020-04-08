@@ -34,7 +34,7 @@
           <@shiro.user>
             <li class="layui-nav-item">
               <a class="fly-nav-avatar" href="javascript:;">
-                <cite class="layui-hide-xs"><shiro.proncipal property="username" /></cite>
+                <cite class="layui-hide-xs"><@shiro.principal property="username" /></cite>
                 <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
                 <i class="layui-badge fly-badge-vip layui-hide-xs">VIP<@shiro.principal property="vipLevel" /></i>
                 <img src="<@shiro.principal property='avatar'/>">

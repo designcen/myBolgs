@@ -85,7 +85,7 @@ public class PostController extends BaseController {
      * @param content 评论内容
      * @return
      */
-    @PostMapping("/reply")
+    @PostMapping("/reply/")
     @Transactional
     @ResponseBody
     public Result reply(Long pid,Long parentId,String content) {

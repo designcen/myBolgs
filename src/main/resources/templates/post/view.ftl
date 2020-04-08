@@ -107,7 +107,7 @@
                             <i class="iconfont icon-zan"></i>
                             <em>${comment.voteUp}</em>
                           </span>
-                                <span type="reply">
+                          <span type="reply">
                             <i class="iconfont icon-svgmoban53"></i> 回复
                           </span>
                                 <div class="jieda-admin">

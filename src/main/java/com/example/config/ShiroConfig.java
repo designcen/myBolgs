@@ -78,6 +78,7 @@ public class ShiroConfig {
         hashMap.put("/post/reply/", "auth");
         hashMap.put("/post/jieda-delete", "auth");
         hashMap.put("/collection/find/", "auth");
+        hashMap.put("/user/jieda-zan/", "auth");
         hashMap.put("/admin/**", "auth, roles[admin]");
         hashMap.put("/user/**", "auth");
         filterFactoryBean.setFilterChainDefinitionMap(hashMap);

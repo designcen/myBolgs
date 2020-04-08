@@ -32,16 +32,33 @@
         <#nested>
         <#-- 尾-->
         <#include "/inc/footer.ftl" />
+        <@shiro.user>
+        <input type="hidden" name="S_username" value="<@shiro.principal property='username'/>">
+        <input type="hidden" name="S_id"       value="<@shiro.principal property='id'/>">
+        <input type="hidden" name="S_avatar"   value="<@shiro.principal property='avatar'/>">
+        <input type="hidden" name="S_sex"      value="<@shiro.principal property='sex'/>">
+        </@shiro.user>
+    <@shiro.guest>
+        <input type="hidden" name="S_username" value="">
+        <input type="hidden" name="S_id" value="">
+        <input type="hidden" name="S_avatar" value="">
+        <input type="hidden" name="S_sex" value="">
+    </@shiro.guest>
     </body>
 </html>
 <script>
+    debugger;
+    var S_username = $("input[name='S_username']").val() == "" ? "游客" : $("input[name='S_username']").val();
+    var S_id = $("input[name='S_id']").val() == "" ? "-1" : $("input[name='S_id']").val();
+    var S_avatar = $("input[name='S_avatar']").val() == "" ? "/res/images/avatar/0.jpg" : $("input[name='S_avatar']").val();
+    var S_sex = $("input[name='S_sex']").val() == "" ? "未知" : $("input[name='S_sex']").val();
     layui.cache.page = 'jie';
     layui.cache.user = {
-        username: '${profile.username!"游客"}'
-        , uid: ${profile.id!'-1'}
-        , avatar: '${profile.avatar!"/res/images/avatar/0.jpg"}'
+        username: S_username
+        , uid: S_id
+        , avatar: S_avatar
         , experience: 0
-        , sex: '${profile.sex!'未知'}'
+        , sex: S_sex
     };
 
     layui.config({

@@ -31,10 +31,25 @@ import java.util.Date;
 @RequestMapping("/collection")
 public class UserCollectionController extends BaseController {
 
+    /**
+     * 查询该帖子（文章）是否收藏
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/find/")
+    public Result collectionFind(Long cid) {
+        int count = userCollectionService.count(new QueryWrapper<UserCollection>()
+                .eq("post_id", cid)
+                .eq("user_id", getProfileId()));
+
+        return Result.succ(MapUtil.of("collection", count > 0));
+    }
 
     @PostMapping("/add")
     @ResponseBody
     public Result collectionAdd(long cid){
+        // 根据文章id获取文章
         Post post = postService.getById(cid);
         Assert.isTrue(post != null,"该帖子已被删除");
         int count = userCollectionService.count(new QueryWrapper<UserCollection>()
@@ -43,7 +58,10 @@ public class UserCollectionController extends BaseController {
         if (count > 0) {
             return Result.fail("你已经收藏");
         }
+        // 保存收藏
         UserCollection collection = new UserCollection();
+        collection.setPostId(cid);
+        collection.setPostUserId(post.getUserId());
         collection.setUserId(getProfileId());
         collection.setCreated(new Date());
         collection.setModified(new Date());
