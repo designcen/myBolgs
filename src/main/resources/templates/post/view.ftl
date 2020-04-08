@@ -82,7 +82,7 @@
                                     <img src="${comment.authorAvatar}" alt="${comment.authorName}">
                                 </a>
                                 <div class="fly-detail-user">
-                                    <a href="" class="fly-link">
+                                    <a href="${base}/user/${comment.authorId}" class="fly-link">
                                         <cite>${comment.authorName}</cite>
                                         <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
                                         <i class="layui-badge fly-badge-vip">VIP${comment.authorVip}</i>

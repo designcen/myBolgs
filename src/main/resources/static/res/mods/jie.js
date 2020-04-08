@@ -137,7 +137,7 @@ layui.define(['layer','fly','form'], function(exports){
 
   /*---------------------------------------------- 解答操作 start-----------------------------------------------------------------*/
   gather.jiedaActive = {
-    zan: function(li){ //赞
+    zan: function(li){ // 点赞，每刷新一次页面，页面重新加载一次的话就可以重新点赞一次
       var othis = $(this), ok = othis.hasClass('zanok');
       fly.json('/user/jieda-zan/', {
         ok: ok
@@ -146,7 +146,7 @@ layui.define(['layer','fly','form'], function(exports){
         if(res.status === 0){
           var zans = othis.find('em').html()|0;
           othis[ok ? 'removeClass' : 'addClass']('zanok');
-          othis.find('em').html(ok ? (--zans) : (++zans));
+          othis.find('em').html(!ok ? (--zans) : (++zans));
         } else {
           layer.msg(res.msg);
         }

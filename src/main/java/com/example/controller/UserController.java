@@ -168,15 +168,9 @@ public class UserController extends BaseController {
 
     @PostMapping("/jieda-zan/")
     @ResponseBody
-    public Result praise(boolean ok, String id) {
-        Integer commentId;
-        try {
-            commentId = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            return Result.fail("该评论不存在");
-        }
-        Comment comment = commentService.getById(commentId);
-        Assert.isNull(comment,"该评论不存在");
+    public Result praise(boolean ok, Long id) {
+        Comment comment = commentService.getById(id);
+        Assert.notNull(comment,"该评论不存在");
         // 如果ok为true说明添加是点赞
         if (ok) {
             Integer voteUp = comment.getVoteUp() + 1;
