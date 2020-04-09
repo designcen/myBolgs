@@ -24,6 +24,10 @@ public class AdminController extends BaseController {
     @Autowired
     SearchService searchService;
 
+    /**
+     * 初始化索引库
+     * @return
+     */
     @ResponseBody
     @PostMapping("/initEsData")
     public Result initEsData() {
@@ -49,31 +53,16 @@ public class AdminController extends BaseController {
         return Result.succ("ES索引库初始化成功！共" + total + "条记录", null);
     }
 
+    /**
+     * 设置置顶、状态
+     * @param id 文章id
+     * @param rank 等级
+     * @param field 操作内容
+     * @return
+     */
     @ResponseBody
     @PostMapping("/jie-set")
     public Result jieSet(Long id, Integer rank, String field) {
-
-        Post post = postService.getById(id);
-        Assert.isTrue(post != null, "该文章已被删除");
-
-        if("delete".equals(field)) {
-            postService.removeById(id);
-            return Result.succ(null);
-
-        } else if("stick".equals(field)) {
-            post.setLevel(rank);
-        } else if("status".equals(field)) {
-            post.setRecommend(rank == 1);
-        }
-        postService.updateById(post);
-
-        return Result.succ(null);
-    }
-
-
-    @ResponseBody
-    @PostMapping("/addCategory")
-    public Result addCategory(Long id, Integer rank, String field) {
 
         Post post = postService.getById(id);
         Assert.isTrue(post != null, "该文章已被删除");

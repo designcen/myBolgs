@@ -28,5 +28,9 @@ public interface PostService extends IService<Post> {
 
     void incrZsetValueAndUnionForLastWeekRank(Long postId, boolean isIncr);
 
+    /**
+     * 设置访问量，+1、-1添加到redis中等待定时任务时再同步到数据库中
+     * @param post
+     */
     void setViewCount(Post post);
 }

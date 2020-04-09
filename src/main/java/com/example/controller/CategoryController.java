@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.web.bind.annotation.RestController;
-
 /**
  * <p>
  *  导航栏分类
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/category")
 public class CategoryController extends BaseController {
     /**
-     *  导航分类
+     *  跳转到指定的分类
      * @param id 分类id
      * @return
      */

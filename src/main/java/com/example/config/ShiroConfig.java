@@ -75,7 +75,7 @@ public class ShiroConfig {
         hashMap.put("/post/edit", "auth");
         hashMap.put("/post/delete/", "auth");
         hashMap.put("/post/submit", "auth");
-        hashMap.put("/post/reply/", "auth");
+        hashMap.put("/comment/reply/", "auth");
         hashMap.put("/post/jieda-delete", "auth");
         hashMap.put("/collection/find/", "auth");
         hashMap.put("/user/jieda-zan/", "auth");

@@ -38,7 +38,8 @@ layui.define(['layer','fly','form'], function(exports){
   });
 
   //提交回答
-  fly.form['/post/reply/'] = function(data, required){
+  fly.form['/comment/reply/'] = function(data, required){
+    debugger;
     var tpl = '<li>\
       <div class="detail-about detail-about-reply">\
         <a class="fly-avatar" href="/u/{{ layui.cache.user.uid }}" target="_blank">\
@@ -64,12 +65,32 @@ layui.define(['layer','fly','form'], function(exports){
       required[0].value = '';
       dom.jieda.find('.fly-none').remove();
       dom.jieda.append(html);
-      
+
       var count = dom.jiedaCount.text()|0;
       dom.jiedaCount.html(++count);
     });
   };
+
+    //异步渲染
+    var asyncRender = function(){
+        var div = $('.fly-admin-box'), jieAdmin = $('#LAY_jieAdmin');
+        //查询帖子是否收藏
+        if(jieAdmin[0] && layui.cache.user.uid != -1){
+            fly.json('/collection/find/', {
+                cid: div.data('id')
+            }, function(res){
+                jieAdmin.append('<span class="layui-btn layui-btn-xs jie-admin '+ (res.data.collection ? 'layui-btn-danger' : '') +'" type="collect" data-type="'+ (res.data.collection ? 'remove' : 'add') +'">'+ (res.data.collection ? '取消收藏' : '收藏') +'</span>');
+            });
+        }
+    }();
+
   /*---------------------------------------------- 求解管理 start-----------------------------------------------------------------*/
+
+  $('body').on('click', '.jie-admin', function(){
+    var othis = $(this), type = othis.attr('type');
+    gather.jieAdmin[type] && gather.jieAdmin[type].call(this, othis.parent());
+  });
+
   gather.jieAdmin = {
     //删求解
     del: function(div){
@@ -90,7 +111,7 @@ layui.define(['layer','fly','form'], function(exports){
     //设置置顶、状态
     ,set: function(div){
       var othis = $(this);
-      fly.json('/api/jie-set/', {
+      fly.json('/admin/jie-set/', {
         id: div.data('id')
         ,rank: othis.attr('rank')
         ,field: othis.attr('field')
@@ -117,27 +138,15 @@ layui.define(['layer','fly','form'], function(exports){
   };
   /*---------------------------------------------- 求解管理 end-----------------------------------------------------------------*/
 
-  $('body').on('click', '.jie-admin', function(){
+  /*---------------------------------------------- 解答操作 start-----------------------------------------------------------------*/
+
+  $('.jieda-reply span').on('click', function(){
     var othis = $(this), type = othis.attr('type');
-    gather.jieAdmin[type] && gather.jieAdmin[type].call(this, othis.parent());
+    gather.jiedaActive[type].call(this, othis.parents('li'));
   });
 
-  //异步渲染
-  var asyncRender = function(){
-    var div = $('.fly-admin-box'), jieAdmin = $('#LAY_jieAdmin');
-    //查询帖子是否收藏
-    if(jieAdmin[0] && layui.cache.user.uid != -1){
-      fly.json('/collection/find/', {
-        cid: div.data('id')
-      }, function(res){
-        jieAdmin.append('<span class="layui-btn layui-btn-xs jie-admin '+ (res.data.collection ? 'layui-btn-danger' : '') +'" type="collect" data-type="'+ (res.data.collection ? 'remove' : 'add') +'">'+ (res.data.collection ? '取消收藏' : '收藏') +'</span>');
-      });
-    }
-  }();
-
-  /*---------------------------------------------- 解答操作 start-----------------------------------------------------------------*/
   gather.jiedaActive = {
-    zan: function(li){ // 点赞，每刷新一次页面，页面重新加载一次的话就可以重新点赞一次
+    zan: function(li){ // 点赞，每刷新一次页面，页面重新加载一次的话就可以重新点赞一次√
       var othis = $(this), ok = othis.hasClass('zanok');
       fly.json('/user/jieda-zan/', {
         ok: ok
@@ -152,14 +161,14 @@ layui.define(['layer','fly','form'], function(exports){
         }
       });
     }
-    ,reply: function(li){ //回复
+    ,reply: function(li){ // 回复 √
       var val = dom.content.val();
       var aite = '@'+ li.find('.fly-detail-user cite').text().replace(/\s/g, '');
       dom.content.focus()
       if(val.indexOf(aite) !== -1) return;
       dom.content.val(aite +' ' + val);
     }
-    ,accept: function(li){ //采纳
+    ,accept: function(li){ // 采纳 ！
       var othis = $(this);
       layer.confirm('是否采纳该回答为最佳答案？', function(index){
         layer.close(index);
@@ -176,37 +185,39 @@ layui.define(['layer','fly','form'], function(exports){
         });
       });
     }
-    ,edit: function(li){ //编辑
-      fly.json('/jie/getDa/', {
+    ,edit: function(li){ // 编辑！
+      fly.json('/post/getDa/', {
         id: li.data('id')
       }, function(res){
-        var data = res.rows;
-        layer.prompt({
-          formType: 2
-          ,value: data.content
-          ,maxlength: 100000
-          ,title: '编辑回帖'
-          ,area: ['728px', '300px']
-          ,success: function(layero){
-            fly.layEditor({
-              elem: layero.find('textarea')
-            });
+          if (res.status === 0) {
+              var data = res.data;
+              layer.prompt({
+                  formType: 2
+                  , value: data.content
+                  , maxlength: 100000
+                  , title: '编辑回帖'
+                  , area: ['728px', '300px']
+                  , success: function (layero) {
+                      fly.layEditor({
+                          elem: layero.find('textarea')
+                      });
+                  }
+              }, function (value, index) {
+                  fly.json('/post/updateDa/', {
+                      id: li.data('id')
+                      , content: value
+                  }, function (res) {
+                      layer.close(index);
+                      li.find('.detail-body').html(fly.content(value));
+                  });
+              });
           }
-        }, function(value, index){
-          fly.json('/jie/updateDa/', {
-            id: li.data('id')
-            ,content: value
-          }, function(res){
-            layer.close(index);
-            li.find('.detail-body').html(fly.content(value));
-          });
-        });
       });
     }
-    ,del: function(li){ //删除
+    ,del: function(li){ // 删除
       layer.confirm('确认删除该回答么？', function(index){
         layer.close(index);
-        fly.json('/api/jieda-delete/', {
+        fly.json('/comment/jieda-delete/', {
           id: li.data('id')
         }, function(res){
           if(res.status === 0){
@@ -221,15 +232,11 @@ layui.define(['layer','fly','form'], function(exports){
             layer.msg(res.msg);
           }
         });
-      });    
+      });
     }
   };
     /*---------------------------------------------- 解答操作 end-----------------------------------------------------------------*/
 
-  $('.jieda-reply span').on('click', function(){
-    var othis = $(this), type = othis.attr('type');
-    gather.jiedaActive[type].call(this, othis.parents('li'));
-  });
 
 
   //定位分页

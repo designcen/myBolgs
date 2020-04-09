@@ -47,7 +47,6 @@
     </body>
 </html>
 <script>
-    debugger;
     var S_username = $("input[name='S_username']").val() == "" ? "游客" : $("input[name='S_username']").val();
     var S_id = $("input[name='S_id']").val() == "" ? "-1" : $("input[name='S_id']").val();
     var S_avatar = $("input[name='S_avatar']").val() == "" ? "/res/images/avatar/0.jpg" : $("input[name='S_avatar']").val();

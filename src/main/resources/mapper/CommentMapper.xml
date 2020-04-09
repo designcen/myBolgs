@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.CommentMapper">
+    <insert id="saveAndUpdate" parameterType="com.example.entity.Comment">
+        insert into comment(
+        content,
+        parent_id,
+        post_id,
+        user_id,
+        vote_up,
+        vote_down,
+        level,
+        created,
+        modified
+        ) values (
+        #{content},
+        #{parentId},
+        #{postId},
+        #{userId},
+        #{voteUp},
+        #{voteDown},
+        #{level},
+        #{created},
+        #{modified}
+        )
+    </insert>
     <select id="selectComments" resultType="com.example.vo.CommentVo">
         select
          c.*,

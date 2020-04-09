@@ -9,6 +9,7 @@ import com.example.service.CommentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.vo.CommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -38,4 +39,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public IPage<CommentVo> getLateComment(Page page,QueryWrapper<Comment> queryWrapper) {
         return commentMapper.selectComments(page,queryWrapper);
     }
+
+    @Override
+    @CacheEvict(cacheNames = "cache_comment",key = "'page_'+#page.current+'_'+#page.size+'_query_'+#comment.userId+'_'+#comment.postId+'_'+#order")
+    public void saveAndUpdate(Page page, Comment comment,String order) {
+        commentMapper.saveAndUpdate(comment);
+    }
+
 }

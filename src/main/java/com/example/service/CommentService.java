@@ -17,7 +17,17 @@ import com.example.vo.CommentVo;
  */
 public interface CommentService extends IService<Comment> {
 
+    /**
+     * 分页获取评论（从缓存中取）
+     * @param page 分页
+     * @param userId 用户id
+     * @param postId 文章id
+     * @param order 顺序
+     * @return
+     */
     IPage paging(Page page, Long userId, Long postId, String order);
 
     IPage<CommentVo> getLateComment(Page page,QueryWrapper<Comment> queryWrapper);
+
+    void saveAndUpdate(Page page, Comment comment,String order);
 }

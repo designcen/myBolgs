@@ -59,7 +59,8 @@
                         <span style="padding-right: 10px; color: #FF7200">悬赏：60飞吻</span>
                         <#if post.userId == profile.id>
                             <span class="layui-btn layui-btn-xs jie-admin" type="edit">
-                                <a href="${base}/post/edit?id=${post.id}">编辑此贴</a>
+                                <#--<a href="${base}/post/edit?id=${post.id}">编辑此贴</a>-->
+                                编辑此贴
                             </span>
                         </#if>
                     </div>
@@ -124,7 +125,7 @@
                 </div>
 
                 <div class="layui-form layui-form-pane">
-                    <form action="${base}/post/reply/" method="post">
+                    <form action="${base}/comment/reply/" method="post">
                         <div class="layui-form-item layui-form-text">
                             <a name="comment"></a>
                             <div class="layui-input-block">
