@@ -1,5 +1,8 @@
 package com.example.utils;
 
+import com.example.entity.Comment;
+import com.example.entity.UserAction;
+import com.example.entity.UserCollection;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,4 +30,19 @@ public class RedisUtilsTest {
         }
     }
 
+
+
+    @Test
+    public void copyProperties(){
+        Object u = new Comment();
+        Comment comment = new Comment();
+        comment.setContent("1");
+        comment.setLevel(2);
+        comment.setPostId(3L);
+        comment.setUserId(4L);
+        comment.setVoteDown(5);
+        comment.setParentId(6L);
+        CommonUtils.copyProperties(u,comment);
+        System.out.println(u);
+    }
 }
