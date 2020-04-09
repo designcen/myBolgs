@@ -41,9 +41,9 @@ public class ShiroConfig {
     public SecurityManager securityManager(AccountRealm accountRealm, SessionManager sessionManager, CacheManager cacheManager){
         // 定义shiro安全管理器，并配置需要实现的功能
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // 实现seeionManager功能
+        // 配置自定义session管理，使用redis
         securityManager.setSessionManager(sessionManager);
-        // 实现cacheManager功能
+        // 实现cacheManager缓存功能
         securityManager.setCacheManager(cacheManager);
         // 实现自定义的realm功能
         securityManager.setRealm(accountRealm);
@@ -52,10 +52,18 @@ public class ShiroConfig {
         return securityManager;
     }
 
+    /**
+     * ShiroFilterFactoryBean 处理拦截资源文件问题。
+     * 注意：初始化ShiroFilterFactoryBean的时候需要注入：SecurityManager
+     * Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截
+     * @param securityManager
+     * @return
+     */
     @Bean
     public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager securityManager) {
 
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
+        // 必须设置 SecurityManager,Shiro的核心安全接口
         filterFactoryBean.setSecurityManager(securityManager);
         // 配置登录的url
         filterFactoryBean.setLoginUrl("/login");
@@ -66,9 +74,11 @@ public class ShiroConfig {
 
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("auth", authFilter());
-
+        // 统计登录人数
         filterFactoryBean.setFilters(filterMap);
 
+        // 配置访问权限 必须是LinkedHashMap，因为它必须保证有序
+        // 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 --> : 这是一个坑，一不小心代码就不好使了
         Map<String, String> hashMap = new LinkedHashMap<>();
         // anon:不需要验证，auth：需要验证，roles[admin]：需要admin权限
         hashMap.put("/login", "anon");
@@ -91,15 +101,6 @@ public class ShiroConfig {
         return new AuthFilter();
     }
 
-    /**
-     * 配置shiro redisManager
-     * 使用的是shiro-redis开源插件
-     *
-     * @return 返回redis管理对象
-     */
-
-
-
     @Bean
     DefaultWebSessionManager sessionManager(RedisSessionDAO redisSessionDAO) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
@@ -107,6 +108,13 @@ public class ShiroConfig {
         return sessionManager;
     }
 
+
+    /**
+     * 配置shiro redisManager
+     * 使用的是shiro-redis开源插件
+     *
+     * @return 返回redis管理对象
+     */
     @Bean
     RedisCacheManager redisCacheManager() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
