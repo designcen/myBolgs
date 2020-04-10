@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.lang.Result;
 import com.example.entity.Comment;
@@ -14,6 +15,7 @@ import com.example.entity.UserCollection;
 import com.example.shiro.AccountProfile;
 import com.example.vo.CollectionVo;
 import com.example.vo.CommentVo;
+import com.example.vo.PostVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -73,13 +75,13 @@ public class UserController extends BaseController {
         // 获取当前shiro中的用户
         AccountProfile suser = getProfile();
         // 分页获取当前用户的所有文章
-        IPage postAll = postService.paging(getPage(), suser.getId(), null, suser.getVipLevel(), null, "created");
+        IPage<PostVo> postAll = postService.paging(getPage(), suser.getId(), null, suser.getVipLevel(), null, "created");
         // 获取收藏数量
         int collectionCount = userCollectionService.count(new QueryWrapper<UserCollection>().eq("user_id", getProfileId()));
         // 获取发帖（文章）数量
         int postCount = postService.count(new QueryWrapper<Post>().eq("user_id", getProfileId()));
 
-        req.setAttribute("pageDate", postAll);
+        req.setAttribute("pageData", postAll);
         req.setAttribute("collectionCount", collectionCount);
         req.setAttribute("postCount", postCount);
         return "user/index";
@@ -182,5 +184,30 @@ public class UserController extends BaseController {
             commentService.updateById(comment);
         }
         return Result.succ("操作成功", null);
+    }
+
+    @ResponseBody
+    @PostMapping("/modified")
+    public Result modified(User user) {
+
+        if(StringUtils.isEmpty(user.getUsername())){
+            return Result.fail("用户名不能为空");
+        }
+
+        User tempUser = userService.getById(getProfileId());
+//        tempUser.setEmail(user.getEmail());
+        tempUser.setUsername(user.getUsername());
+        tempUser.setGender(user.getGender());
+        tempUser.setSign(user.getSign());
+
+        boolean isSucc = userService.updateById(tempUser);
+        if(isSucc) {
+            //更新shiro的信息
+            AccountProfile profile = getProfile();
+            profile.setUsername(user.getUsername());
+            profile.setGender(user.getGender());
+        }
+
+        return isSucc ? Result.succ("更新成功", null, "/user/set"): Result.fail("更新失败");
     }
 }

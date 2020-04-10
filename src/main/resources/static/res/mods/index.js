@@ -541,8 +541,9 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
       return;
     }
     text = text.replace(/^@|（[\s\S]+?）/g, '');
+    var parentId = othis.parent().next("input[name='parentId']").val();
     othis.attr({
-      href: '/jump?username='+ text
+      href: '/user/'+ parentId
       ,target: '_blank'
     });
   });

@@ -11,6 +11,7 @@ import com.example.vo.CommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,23 +27,26 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private CommentMapper commentMapper;
     @Override
-    @Cacheable(cacheNames = "cache_comment",key = "'page_'+#page.current+'_'+#page.size+'_query_'+#userId+'_'+#postId+'_'+#order")
+    @Cacheable(cacheNames = "cache_comment", key = "'page_'+#page.current+'_'+#page.size+'_query_'+#userId+'_'+#postId+'_'+#order")
     public IPage paging(Page page, Long userId, Long postId, String order) {
         QueryWrapper wrapper = new QueryWrapper<Comment>()
-                .eq(userId != null,"c.user_id",userId)
-                .eq(postId != null,"c.post_id",postId);
-        IPage<CommentVo> pageData = commentMapper.selectComments(page,wrapper);
+                .eq(userId != null, "c.user_id", userId)
+                .eq(postId != null, "c.post_id", postId);
+        IPage<CommentVo> pageData = commentMapper.selectComments(page, wrapper);
         return pageData;
     }
 
     @Override
-    public IPage<CommentVo> getLateComment(Page page,QueryWrapper<Comment> queryWrapper) {
-        return commentMapper.selectComments(page,queryWrapper);
+    public IPage<CommentVo> getLateComment(Page page, QueryWrapper<Comment> queryWrapper) {
+        return commentMapper.selectComments(page, queryWrapper);
     }
 
     @Override
-    @CacheEvict(cacheNames = "cache_comment",key = "'page_'+#page.current+'_'+#page.size+'_query_'+#comment.userId+'_'+#comment.postId+'_'+#order")
-    public void saveAndUpdate(Page page, Comment comment,String order) {
+    // 一次删除两个缓存，包括登陆的和没登陆的
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "cache_comment", key = "'page_'+#totalPage+'_'+#limit+'_query_'+#comment.userId+'_'+#comment.postId+'_'+#order"),
+            @CacheEvict(cacheNames = "cache_comment", key = "'page_'+#totalPage+'_'+#limit+'_query_null_'+#comment.postId+'_'+#order")})
+    public void saveAndUpdate(int totalPage, int limit, Comment comment, String order) {
         commentMapper.saveAndUpdate(comment);
     }
 

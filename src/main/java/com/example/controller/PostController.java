@@ -41,7 +41,6 @@ public class PostController extends BaseController {
 
     /**
      * 查看帖子
-     *
      * @param id 帖子id
      * @return
      */
@@ -52,8 +51,9 @@ public class PostController extends BaseController {
         Assert.notNull(postVo, "文章已被删除！");
         // redis中访问量+1
         postService.setViewCount(postVo);
+        long userId = getProfileId();
         // 分页获取评论
-        IPage commentPage = commentService.paging(getPage(), null, id, "id");
+        IPage commentPage = commentService.paging(getPage(), userId == 0 ? null : userId, id, "id");
         req.setAttribute("post", postVo);
         req.setAttribute("pageData", commentPage);
         return "post/view";

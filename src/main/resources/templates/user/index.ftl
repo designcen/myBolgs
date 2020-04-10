@@ -10,9 +10,9 @@
                 <li data-type="collection" lay-id="collection"><a href="/user/find">我收藏的帖（<span>${collectionCount!}</span>）</a></li>
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
-                <div class="layui-tab-item">
+                <#--<div class="layui-tab-item">-->
                     <ul class="mine-view jie-row">
-                        <#list pageDate.records as post>
+                        <#list pageData.records as post>
                             <li>
                                 <#if post.recommend>
                                     <span class="fly-jing">精</span>
@@ -22,9 +22,13 @@
                                 <em class="layui-hide-xs">${post.viewCount}阅/${post.commentCount}答</em>
                             </li>
                         </#list>
+                        <#-- 分页位置不好看
+                        <div style="text-align: center">
+                            <@page pageData></@page>
+                        </div>-->
                     </ul>
-                    <div id="LAY_page"></div>
-                </div>
+                    <#--<div id="LAY_page"></div>-->
+                <#--</div>-->
             </div>
         </div>
     </div>

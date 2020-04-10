@@ -17,7 +17,7 @@
 
             <#-- 我的资料 -->
                 <div class="layui-form layui-form-pane layui-tab-item layui-show">
-                    <form method="post">
+                    <form method="post" action="/user/modified">
                         <div class="layui-form-item">
                             <label for="L_email" class="layui-form-label">邮箱</label>
                             <div class="layui-input-inline">
@@ -36,12 +36,12 @@
                             </div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
-                                    <#if user.gender == "0">
-                                        <input type="radio" name="sex" value="0" checked title="男">
-                                        <input type="radio" name="sex" value="1" title="女">
-                                    <#else >
+                                    <#if user.gender != "0">
                                         <input type="radio" name="sex" value="0" title="男">
                                         <input type="radio" name="sex" value="1" checked title="女">
+                                    <#else >
+                                        <input type="radio" name="sex" value="0" checked title="男">
+                                        <input type="radio" name="sex" value="1" title="女">
                                     </#if>
                                 </div>
                             </div>
@@ -63,6 +63,7 @@
                         <div class="layui-form-item">
                             <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
                         </div>
+                    </form>
                 </div>
 
             <#-- 头像 -->

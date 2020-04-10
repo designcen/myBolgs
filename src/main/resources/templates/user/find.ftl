@@ -10,17 +10,21 @@
                 <li data-type="collection"  lay-id="collection" class="layui-this">我收藏的帖（<span>${collectionCount!}</span>）</li>
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
-                <div class="layui-tab-item">
+                <#--<div class="layui-tab-item">-->
                     <ul class="mine-view jie-row">
-                        <#list pageDate.records as post>
+                        <#list pageData.records as post>
                             <li>
                                 <a class="jie-title" href="../jie/detail.html" target="_blank">${post.title}</a>
                                 <i>收藏于 ${post.collectionCreated?string("yyyy-MM-dd HH:mm:ss")}</i>
                             </li>
                         </#list>
+                    <#-- 分页位置不好看
+                    <div style="text-align: center">
+                        <@page pageData></@page>
+                    </div>-->
                     </ul>
-                    <div id="LAY_page1"></div>
-                </div>
+                    <#--<div id="LAY_page1"></div>-->
+                <#--</div>-->
             </div>
         </div>
     </div>

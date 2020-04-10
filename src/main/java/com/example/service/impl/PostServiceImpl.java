@@ -67,7 +67,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Override
     @Cacheable(cacheNames = "cache_post", key = "'page_' + #page.current + '_' + #page.size " +
             "+ '_query_' +#userId  + '_' + #categoryId + '_' + #level  + '_' + #recommend  + '_' + #order")
-    public IPage paging(Page page, Long userId, Long categoryId, Integer level, Boolean recommend, String order) {
+    public IPage<PostVo> paging(Page page, Long userId, Long categoryId, Integer level, Boolean recommend, String order) {
         if (level == null) level = -1;
         QueryWrapper wrapper = new QueryWrapper<Post>()
                 .eq(userId != null, "user_id", userId)

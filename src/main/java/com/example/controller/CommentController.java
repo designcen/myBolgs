@@ -55,9 +55,10 @@ public class CommentController extends BaseController {
 
 
     /**
-     * 评论帖子
-     *
-     * @param pid      帖子id
+     *  评论帖子
+     * @param pid 帖子id
+     * @param count 总条数
+     * @param limit 每页条数
      * @param parentId 被回复评论的id
      * @param content  评论内容
      * @return
@@ -65,7 +66,7 @@ public class CommentController extends BaseController {
     @PostMapping("/reply/")
     @Transactional
     @ResponseBody
-    public Result reply(Long pid, Long parentId, String content) {
+    public Result reply(Long pid,int count,int limit, Long parentId, String content) {
         Assert.notNull(pid, "找不到对应文章！");
         Assert.hasLength(content, "评论内容不能为空！");
         Post post = postService.getById(pid);
@@ -80,8 +81,9 @@ public class CommentController extends BaseController {
         comment.setLevel(0);
         comment.setCreated(new Date());
         comment.setModified(new Date());
+        int totalPage = count % limit == 0 ? count / limit : (count / limit) +1;
         // 保存评论并更新缓存
-        commentService.saveAndUpdate(getPage(),comment,"id");
+        commentService.saveAndUpdate(totalPage,limit,comment,"id");
         // 评论数量加一
         post.setCommentCount(post.getCommentCount() + 1);
         postService.saveOrUpdate(post);

@@ -84,6 +84,7 @@
                                 </a>
                                 <div class="fly-detail-user">
                                     <a href="${base}/user/${comment.authorId}" class="fly-link">
+                                        <input type="hidden" value="${comment.authorId}">
                                         <cite>${comment.authorName}</cite>
                                         <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
                                         <i class="layui-badge fly-badge-vip">VIP${comment.authorVip}</i>
@@ -101,8 +102,9 @@
                             <#--<i class="iconfont icon-caina" title="最佳答案"></i>-->
                             </div>
                             <div class="detail-body jieda-body photos">
-                                ${comment.content}
+                                ${comment.content!}
                             </div>
+                            <input type="hidden" name="parentId" value="${comment.parentId!}">
                             <div class="jieda-reply">
                           <span class="jieda-zan zanok" type="zan">
                             <i class="iconfont icon-zan"></i>
@@ -129,13 +131,15 @@
                         <div class="layui-form-item layui-form-text">
                             <a name="comment"></a>
                             <div class="layui-input-block">
-                                <textarea id="L_content" name="content" required lay-verify="required"
-                                          placeholder="请输入内容" class="layui-textarea fly-editor"
-                                          style="height: 150px;"></textarea>
+                                <textarea id="L_content" name="content" required lay-verify="required" placeholder="请输入内容"
+                                          class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+                            <input type="hidden" name="parentId" value="">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <input type="hidden" name="pid" value="${post.id}">
+                            <input type="hidden" name="count" value="${pageData.total}">
+                            <input type="hidden" name="limit" value="${pageData.size}">
                             <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
                         </div>
                     </form>

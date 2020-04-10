@@ -3,7 +3,7 @@
  @Name: 求解板块
 
  */
- 
+
 layui.define(['layer','fly','form'], function(exports){
 
   var $ = layui.jquery;
@@ -12,7 +12,7 @@ layui.define(['layer','fly','form'], function(exports){
   var laytpl = layui.laytpl;
   var form = layui.form;
   var fly = layui.fly;
-  
+
   var gather = {}, dom = {
     jieda: $('#jieda')
     ,content: $('#L_content')
@@ -37,8 +37,8 @@ layui.define(['layer','fly','form'], function(exports){
     }
   });
 
-  //提交回答
-  fly.form['/comment/reply/'] = function(data, required){
+  //提交回答 没用上
+  /*fly.form['/comment/reply/'] = function(data, required){
     debugger;
     var tpl = '<li>\
       <div class="detail-about detail-about-reply">\
@@ -69,7 +69,7 @@ layui.define(['layer','fly','form'], function(exports){
       var count = dom.jiedaCount.text()|0;
       dom.jiedaCount.html(++count);
     });
-  };
+  };*/
 
     //异步渲染
     var asyncRender = function(){
@@ -164,9 +164,11 @@ layui.define(['layer','fly','form'], function(exports){
     ,reply: function(li){ // 回复 √
       var val = dom.content.val();
       var aite = '@'+ li.find('.fly-detail-user cite').text().replace(/\s/g, '');
+      var parentId = li.find('.fly-detail-user input').val().replace(/\s/g, '');
       dom.content.focus()
       if(val.indexOf(aite) !== -1) return;
       dom.content.val(aite +' ' + val);
+      dom.content.parent().find("input[name='parentId']").val(parentId);
     }
     ,accept: function(li){ // 采纳 ！
       var othis = $(this);
