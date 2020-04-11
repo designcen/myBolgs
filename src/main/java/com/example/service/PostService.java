@@ -33,4 +33,9 @@ public interface PostService extends IService<Post> {
      * @param post
      */
     void setViewCount(Post post);
+    /**
+     * 获取redis中的访问量
+     * @param post
+     */
+    Integer getViewCount(Post post);
 }

@@ -18,10 +18,9 @@
                                 <i>收藏于 ${post.collectionCreated?string("yyyy-MM-dd HH:mm:ss")}</i>
                             </li>
                         </#list>
-                    <#-- 分页位置不好看
                     <div style="text-align: center">
                         <@page pageData></@page>
-                    </div>-->
+                    </div>
                     </ul>
                     <#--<div id="LAY_page1"></div>-->
                 <#--</div>-->

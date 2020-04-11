@@ -22,10 +22,9 @@
                                 <em class="layui-hide-xs">${post.viewCount}阅/${post.commentCount}答</em>
                             </li>
                         </#list>
-                        <#-- 分页位置不好看
                         <div style="text-align: center">
                             <@page pageData></@page>
-                        </div>-->
+                        </div>
                     </ul>
                     <#--<div id="LAY_page"></div>-->
                 <#--</div>-->

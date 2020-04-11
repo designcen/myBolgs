@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     private String sign;
 
     /**
-     * 性别
+     * 性别（0：男1：女）
      */
     private String gender;
 

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,7 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -76,6 +80,10 @@ public class UserController extends BaseController {
         AccountProfile suser = getProfile();
         // 分页获取当前用户的所有文章
         IPage<PostVo> postAll = postService.paging(getPage(), suser.getId(), null, suser.getVipLevel(), null, "created");
+        // 由于浏览数是先存入到redis然后定时存入mysql的，所以这里需要取redis获取浏览数获取最新数据
+        for (PostVo p  : postAll.getRecords()) {
+          p.setViewCount(postService.getViewCount(p));
+        }
         // 获取收藏数量
         int collectionCount = userCollectionService.count(new QueryWrapper<UserCollection>().eq("user_id", getProfileId()));
         // 获取发帖（文章）数量
@@ -138,14 +146,10 @@ public class UserController extends BaseController {
         }
         user.setPassword(SecureUtil.md5(newPass));
         userService.updateById(user);
-        return Result.succ("更新成功", null, "/user/set");
+        return Result.succ("更新成功");
     }
 
-    /**
-     * 跳转到用户设置
-     *
-     * @return
-     */
+
     @GetMapping("/active")
     public String active() {
         User user = userService.getById(getProfileId());
@@ -199,15 +203,85 @@ public class UserController extends BaseController {
         tempUser.setUsername(user.getUsername());
         tempUser.setGender(user.getGender());
         tempUser.setSign(user.getSign());
-
+        tempUser.setCity(user.getCity());
         boolean isSucc = userService.updateById(tempUser);
         if(isSucc) {
             //更新shiro的信息
             AccountProfile profile = getProfile();
             profile.setUsername(user.getUsername());
             profile.setGender(user.getGender());
+            profile.setCity(user.getCity());
+        }
+        return isSucc ? Result.succ("更新成功"): Result.fail("更新失败");
+    }
+
+
+    /**
+     * 上传头像
+     * @param file 上传的文件
+     * @param type 上传类型
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/upload/")
+    public Result upload(@RequestParam(value = "file") MultipartFile file,
+                         @RequestParam(name="type", defaultValue = "avatar") String type) {
+
+        if(file.isEmpty()) {return Result.fail("上传失败");}
+
+        // 获取文件名
+        String fileName = file.getOriginalFilename();
+        // 用作存入数据库中，需要添加文件路径
+        String fileName1 = fileName;
+        log.info("上传的文件名为：" + fileName);
+        // 获取文件的后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        log.info("上传的后缀名为：" + suffixName);
+        // 文件上传路径
+        String filePath = constant.getUploadUrl();
+        // 绝对路径的文件
+        File newPath;
+        if ("avatar".equalsIgnoreCase(type)) {
+            newPath = new File(new File(filePath,"avatar").getAbsolutePath());
+            fileName = "avatar_" + getProfileId() + suffixName;
+            fileName1 = "/avatar/avatar_" + getProfileId() + suffixName;
+
+        } else if ("post".equalsIgnoreCase(type)) {
+            newPath = new File(new File(filePath,"post").getAbsolutePath());
+            fileName = "post_" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + suffixName;
+            fileName1 = "/post/post_" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + suffixName;
+        }else{
+            newPath = new File(new File(filePath).getAbsolutePath());
+        }
+        // 检测是否存在目录
+        if (!newPath.exists()) {
+            newPath.mkdirs();
         }
 
-        return isSucc ? Result.succ("更新成功", null, "/user/set"): Result.fail("更新失败");
+        File dest = new File(newPath,fileName);
+        try {
+            file.transferTo(dest);
+            log.info("上传成功后的文件路径为：" + filePath + fileName);
+
+            String url = "/" + filePath + fileName1;
+
+            log.info("url ---> {}", url);
+
+            User current = userService.getById(getProfileId());
+            current.setAvatar(url);
+            userService.updateById(current);
+
+            //更新shiro的信息
+            AccountProfile profile = getProfile();
+            profile.setAvatar(url);
+
+            return Result.succ(url);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Result.succ(null);
     }
 }

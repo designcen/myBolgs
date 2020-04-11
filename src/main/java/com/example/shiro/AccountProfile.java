@@ -20,7 +20,7 @@ public class AccountProfile implements Serializable {
     private Integer commentCount;
     private Date lasted;
     private Integer vipLevel;
-
+    private String city;
     public Integer getVipLevel() {
         return vipLevel == null ? Integer.valueOf(0) : vipLevel;
     }

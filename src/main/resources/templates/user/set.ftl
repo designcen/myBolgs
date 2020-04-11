@@ -36,12 +36,12 @@
                             </div>
                             <div class="layui-inline">
                                 <div class="layui-input-inline">
-                                    <#if user.gender != "0">
-                                        <input type="radio" name="sex" value="0" title="男">
-                                        <input type="radio" name="sex" value="1" checked title="女">
+                                    <#if user.gender == "1">
+                                        <input type="radio" name="gender" value="0" title="男">
+                                        <input type="radio" name="gender" value="1" checked title="女">
                                     <#else >
-                                        <input type="radio" name="sex" value="0" checked title="男">
-                                        <input type="radio" name="sex" value="1" title="女">
+                                        <input type="radio" name="gender" value="0" checked title="男">
+                                        <input type="radio" name="gender" value="1" title="女">
                                     </#if>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                             <label for="L_sign" class="layui-form-label">签名</label>
                             <div class="layui-input-block">
                                 <textarea placeholder="随便写些什么刷下存在感" id="L_sign" name="sign" autocomplete="off"
-                                          class="layui-textarea" style="height: 80px;">${user.sigin!}</textarea>
+                                          class="layui-textarea" style="height: 80px;">${user.sign!}</textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -86,14 +86,14 @@
                         <div class="layui-form-item">
                             <label for="L_nowpass" class="layui-form-label">当前密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="L_nowpass" name="nowpass" required lay-verify="required"
+                                <input type="password" id="L_nowpass" name="oldPass" required lay-verify="required"
                                        autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label for="L_pass" class="layui-form-label">新密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="L_pass" name="pass" required lay-verify="required"
+                                <input type="password" id="L_pass" name="newPass" required lay-verify="required"
                                        autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid layui-word-aux">6到16个字符</div>
@@ -101,7 +101,7 @@
                         <div class="layui-form-item">
                             <label for="L_repass" class="layui-form-label">确认密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="L_repass" name="repass" required lay-verify="required"
+                                <input type="password" id="L_repass" name="reNewPass" required lay-verify="required"
                                        autocomplete="off" class="layui-input">
                             </div>
                         </div>

@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author cenkang
@@ -40,22 +40,22 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     public void initIndexWeekRank() {
         // 缓存最近7天的文章评论数
         List<Post> last7DayPosts = this.list(new QueryWrapper<Post>()
-                        // ge是大于等于
-                .ge("created", DateUtil.offsetDay(new Date(),-7).toJdkDate())
+                // ge是大于等于
+                .ge("created", DateUtil.offsetDay(new Date(), -7).toJdkDate())
                 .select("id,title,user_id,comment_count,view_count,created"));
-        for (Post post  : last7DayPosts) {
+        for (Post post : last7DayPosts) {
             //定义键的格式 day_rank:yyyyMMdd
             String key = "day_rank:" + DateUtil.format(post.getCreated(),
                     DatePattern.PURE_DATE_PATTERN);
             // 设置有效期,目标时间与当前时间的差当前时间
             long between = DateUtil.between(new Date(),
-                    post.getCreated(),DateUnit.DAY);
+                    post.getCreated(), DateUnit.DAY);
             // 换算成秒s
             long expireTime = (7 - between) * 24 * 60 * 60;
             // 缓存文章到zSet中，日期为集合名称，文章id为值（唯一），评论数量作为排行分数标准
-            redisUtils.zSet(key,post.getId(),post.getCommentCount());
+            redisUtils.zSet(key, post.getId(), post.getCommentCount());
             // 设置有效期
-            redisUtils.expire(key,expireTime);
+            redisUtils.expire(key, expireTime);
             // 缓存文章基本信息（hash结构）
             this.hashCachePostIdAndTitle(post);
         }
@@ -72,11 +72,11 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         QueryWrapper wrapper = new QueryWrapper<Post>()
                 .eq(userId != null, "user_id", userId)
                 .eq(categoryId != null && categoryId != 0, "category_id", categoryId)
-                .ge(level >= 0,"level",level)
+                .ge(level >= 0, "level", level)
                 .eq(recommend != null, "recommend", recommend)
                 .orderByDesc(order);
 
-        IPage<PostVo> pageDate = postMapper.selectPosts(page,wrapper);
+        IPage<PostVo> pageDate = postMapper.selectPosts(page, wrapper);
 
         return pageDate;
     }
@@ -91,7 +91,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
         String dayRank = "day_rank:" + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
         // 文章阅读加一
-        redisUtils.zIncrementScore(dayRank, postId, isIncr? 1: -1);
+        redisUtils.zIncrementScore(dayRank, postId, isIncr ? 1 : -1);
         this.hashCachePostIdAndTitle(this.getById(postId));
         // 重新union最近7天
         this.zUnionAndStoreLast7DaysforLastWeekRank();
@@ -99,30 +99,35 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     public void setViewCount(Post post) {
-        // 从缓存中获取阅读量
-        Integer viewCount = (Integer) redisUtils.hget("rank_post_" + post.getId(),"post:viewCount");
-        if (viewCount != null) {
+        Integer viewCount = getViewCount(post.getId());
+        if (viewCount != 0) {
             post.setViewCount(viewCount + 1);
-        }else{
+        } else {
             post.setViewCount(post.getViewCount() + 1);
         }
         // 设置新的阅读
-        redisUtils.hset("rank_post_" + post.getId(),"post:viewCount",post.getViewCount());
+        redisUtils.hset("rank_post_" + post.getId(), "post:viewCount", post.getViewCount());
+    }
+
+    @Override
+    public Integer getViewCount(Post post) {
+        return getViewCount(post.getId());
     }
 
     /**
      * hash结构缓存文章标题和id
+     *
      * @param post
      */
     private void hashCachePostIdAndTitle(Post post) {
-        boolean isExist = redisUtils.hasKey("rank_post_"+post.getId());
-        if (!isExist){
+        boolean isExist = redisUtils.hasKey("rank_post_" + post.getId());
+        if (!isExist) {
             long between = DateUtil.between(new Date(),
-                    post.getCreated(),DateUnit.DAY);
+                    post.getCreated(), DateUnit.DAY);
             long expireTime = (7 - between) * 24 * 60 * 60;
 
             // 缓存文章基本信息（id、标题）（hash结构）
-            redisUtils.hset("rank_post_" + post.getId(), "post:id",post.getId(),expireTime);
+            redisUtils.hset("rank_post_" + post.getId(), "post:id", post.getId(), expireTime);
             redisUtils.hset("rank_post_" + post.getId(), "post:title", post.getTitle(), expireTime);
         }
     }
@@ -135,12 +140,22 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         String prifix = "day_rank:";
         List<String> keys = new ArrayList<>();
         String key = prifix + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
-        for (int i = -7 ; i < 0 ;i++){
+        for (int i = -7; i < 0; i++) {
             Date date = DateUtil.offsetDay(new Date(), i).toJdkDate();
             // 测试toJdkDate
 //            Date date = DateUtil.offsetDay(new Date(), i);
-            keys.add(prifix + DateUtil.format(date,DatePattern.PURE_DATE_PATTERN));
+            keys.add(prifix + DateUtil.format(date, DatePattern.PURE_DATE_PATTERN));
         }
-        redisUtils.zUnionAndStore(key,keys,"last_week_rank");
+        redisUtils.zUnionAndStore(key, keys, "last_week_rank");
+    }
+
+    /**
+     * 从缓存中获取阅读量
+     * @param postId 文章id
+     * @return
+     */
+    private Integer getViewCount(Long postId) {
+        Integer viewCount = (Integer) redisUtils.hget("rank_post_" + postId, "post:viewCount");
+        return viewCount != null ? viewCount : 0;
     }
 }

@@ -556,7 +556,7 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
         if(res.action){
           location.href = res.action;
         } else {
-          fly.form[action||button.attr('key')](data.field, data.form);
+          fly.form[button.attr('key') || action](data.field, data.form);
         }
       };
       if(res.status == 0){
