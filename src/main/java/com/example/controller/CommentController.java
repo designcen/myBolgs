@@ -81,7 +81,9 @@ public class CommentController extends BaseController {
         comment.setLevel(0);
         comment.setCreated(new Date());
         comment.setModified(new Date());
-        int totalPage = count % limit == 0 ? count / limit : (count / limit) +1;
+        // 1.首先判断count（总评论数）是否为0，若为零，则totalPage（总页数为1）
+        // 2.在总评论数不为0的情况下再判断一共有几页
+        int totalPage = count == 0 ? 1 : (count % limit == 0 ? count / limit : (count / limit) +1);
         // 保存评论并更新缓存
         commentService.saveAndUpdate(totalPage,limit,comment,"id");
         // 评论数量加一

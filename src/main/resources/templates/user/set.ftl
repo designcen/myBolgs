@@ -133,7 +133,13 @@
                         </li>
                     </ul>
                 </div>
-
+             <@shiro.hasRole name="admin">
+                <div class="layui-form layui-form-pane layui-tab-item">
+                    <form method="post" action="${base}/admin/initEsData">
+                        <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit alert="true">同步ES</button>
+                    </form>
+                </div>
+             </@shiro.hasRole>
             </div>
         </div>
     </div>

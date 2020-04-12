@@ -7,7 +7,7 @@
     <i class="iconfont icon-renzheng" title="Fly社区认证"></i>
     <h1>
     ${user.username!}
-        <#if user.gender! == "1">
+        <#if user.gender! == "0">
             <i class="iconfont icon-nan"></i>
         <#else>
             <i class="iconfont icon-nv"></i>
