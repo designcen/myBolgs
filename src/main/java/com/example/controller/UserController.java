@@ -53,7 +53,7 @@ public class UserController extends BaseController {
         user.setPassword(null);
         // 30天文章的内容
         Date date30Before = DateUtil.offsetDay(new Date(), -30).toJdkDate();
-        List<Post> posts = postService.list(new QueryWrapper<Post>()
+        IPage pageData = postService.page(getPage(), new QueryWrapper<Post>()
                 .eq("user_id", id)
                 .ge("created", date30Before)
                 .orderByDesc("created"));
@@ -64,7 +64,7 @@ public class UserController extends BaseController {
                 .ge("c.created", time24Before)
                 .orderByDesc("c.created"));
         req.setAttribute("user", user);
-        req.setAttribute("posts", posts);
+        req.setAttribute("pageData", pageData);
         req.setAttribute("pageData", commentList);
         return "user/home";
     }

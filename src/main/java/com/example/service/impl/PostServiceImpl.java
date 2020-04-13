@@ -64,9 +64,18 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         this.zUnionAndStoreLast7DaysforLastWeekRank();
     }
 
+    /**
+     * 通过条件获取分页后的文章，并缓存结果
+     * @param page 分页
+     * @param userId 用户id
+     * @param categoryId 分类id
+     * @param level 文章置顶等级
+     * @param recommend 是否加精
+     * @param order 排序
+     * @return
+     */
     @Override
-    @Cacheable(cacheNames = "cache_post", key = "'page_' + #page.current + '_' + #page.size " +
-            "+ '_query_' +#userId  + '_' + #categoryId + '_' + #level  + '_' + #recommend  + '_' + #order")
+    @Cacheable(cacheNames = "cache_post", key = "'page_' + #page.current + '_' + #page.size " + "+ '_query_' + #categoryId + '_' + #recommend  + '_' + #order")
     public IPage<PostVo> paging(Page page, Long userId, Long categoryId, Integer level, Boolean recommend, String order) {
         if (level == null) level = -1;
         QueryWrapper wrapper = new QueryWrapper<Post>()
@@ -81,11 +90,21 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         return pageDate;
     }
 
+    /**
+     * 查询文章包装类信息，包括文章作者的相关信息
+     * @param wrapper
+     * @return
+     */
     @Override
     public PostVo selectOne(QueryWrapper wrapper) {
         return postMapper.selectOne(wrapper);
     }
 
+    /**
+     * redis缓存中评论数量加减
+     * @param postId 文章id
+     * @param isIncr 是否增加
+     */
     @Override
     public void incrZsetValueAndUnionForLastWeekRank(Long postId, boolean isIncr) {
 
@@ -109,9 +128,23 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         redisUtils.hset("rank_post_" + post.getId(), "post:viewCount", post.getViewCount());
     }
 
+    /**
+     * 根据文章id获取评论数
+     * @param post
+     * @return
+     */
     @Override
     public Integer getViewCount(Post post) {
         return getViewCount(post.getId());
+    }
+
+    /**
+     * 设置redis的post顺序
+     * @param post
+     */
+    @Override
+    public void setRedisPostRank(Post post) {
+
     }
 
     /**

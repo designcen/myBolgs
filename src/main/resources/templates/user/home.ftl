@@ -15,7 +15,7 @@
         <i class="layui-badge fly-badge-vip">VIP${user.vipLevel!}</i>
     </h1>
 
-    <p style="padding: 10px 0; color: #5FB878;">认证信息：layui 作者</p>
+    <#--<p style="padding: 10px 0; color: #5FB878;">认证信息：layui 作者</p>-->
 
     <p class="fly-home-info">
         <i class="iconfont icon-kiss" title="飞吻"></i><span style="color: #FF7200;">${user.point!}飞吻</span>
@@ -32,10 +32,10 @@
             <div class="fly-panel">
                 <h2 class="fly-panel-title">最近30天发表的文章</h2>
                 <ul class="jie-row">
-                    <#if posts?? && (posts?size > 0) >
-                        <#list posts as post>
+                    <#if pageData.records?? && (pageData.records?size > 0) >
+                        <#list pageData.records as post>
                             <li>
-                                <#if post.recommend>
+                                <#if post.recommend!>
                                     <span class="fly-jing">精</span>
                                 </#if>
                                 <a href="${base}/post/${post.id}" class="jie-title"> ${post.title}</a>
@@ -49,6 +49,9 @@
                         </div>
                     </#if>
                 </ul>
+                <div style="text-align: center">
+                    <@page pageData></@page>
+                </div>
             </div>
         </div>
 
@@ -66,16 +69,16 @@
                                 <div class="home-dacontent">${comment.content!}</div>
                             </li>
                         </#list>
-                        <div style="text-align: center">
-                            <#-- 分页 -->
-                            <@page pageData></@page>
-                        </div>
                     <#else >
                         <div class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;">
                             <span>没有回答任何问题</span>
                         </div>
                     </#if>
                 </ul>
+                <div style="text-align: center">
+                    <#-- 分页 -->
+                    <@page pageData></@page>
+                </div>
             </div>
         </div>
     </div>

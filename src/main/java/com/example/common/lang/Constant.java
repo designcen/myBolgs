@@ -21,6 +21,9 @@ public class Constant {
     public final static Long IM_DEFAULT_GROUP_ID = 999L;
     public static final Long IM_DEFAULT_USER_ID = 999L;
 
+    // 评论cookie的键
+    public final static String COMMENT_COOKIE = "comment_cookie";
+
     public final static String IM_GROUP_NAME = "homework-group-study";
 
     //消息类型

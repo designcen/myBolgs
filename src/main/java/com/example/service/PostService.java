@@ -20,7 +20,7 @@ public interface PostService extends IService<Post> {
     /**
      * 初始化首页的周评论排行榜 启动时候将数据存入reids
      */
-    public  void initIndexWeekRank();
+    void initIndexWeekRank();
 
     IPage<PostVo> paging(Page page,Long userId, Long categoryId,Integer level, Boolean recommend, String order);
 
@@ -38,4 +38,6 @@ public interface PostService extends IService<Post> {
      * @param post
      */
     Integer getViewCount(Post post);
+
+    void setRedisPostRank(Post post);
 }

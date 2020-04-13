@@ -11,7 +11,7 @@
                 </ul>
                 <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
                     <div class="layui-tab-item layui-show">
-                        <form action="/post/submit" method="post">
+                        <form action="/post/publish" method="post">
                             <div class="layui-row layui-col-space15 layui-form-item">
                                 <div class="layui-col-md3">
                                     <label class="layui-form-label">所在专栏</label>

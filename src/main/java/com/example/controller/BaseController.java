@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author cenkang
@@ -26,6 +27,8 @@ public class BaseController {
 
     @Autowired
     HttpServletRequest req;
+    @Autowired
+    HttpServletResponse resp;
 
     @Autowired
     RedisUtils redisUtils;

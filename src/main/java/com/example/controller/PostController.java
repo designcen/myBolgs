@@ -5,12 +5,12 @@ import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.common.lang.Constant;
 import com.example.common.lang.Result;
 import com.example.config.RabbitMqConfig;
 import com.example.entity.*;
 import com.example.search.common.PostMqIndexMessage;
-import com.example.shiro.AccountProfile;
+import com.example.utils.CommonUtils;
 import com.example.vo.PostVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -49,10 +50,21 @@ public class PostController extends BaseController {
         QueryWrapper wrapper = new QueryWrapper<Post>().eq(id != null, "p.id", id);
         PostVo postVo = postService.selectOne(wrapper);
         Assert.notNull(postVo, "文章已被删除！");
-        // redis中访问量+1
-        postService.setViewCount(postVo);
+        // 获取该请求的cookie,判断该请求是否读过该文章，若没有，则添加访问量，并且添加该文章的cookie
+        Cookie cookie = CommonUtils.getCookie(req, Constant.COMMENT_COOKIE + id);
+        if (cookie == null) {
+            // redis中访问量+1
+            postService.setViewCount(postVo);
+            // 添加含该文章标记的cookie
+            CommonUtils.addcookie(resp, Constant.COMMENT_COOKIE + id, "true", null, 0);
+        }
+        // 从redis中获取浏览数量
+        int viewCount = postService.getViewCount(postVo);
+        if (viewCount != 0) {
+            postVo.setViewCount(viewCount);
+        }
         // 分页获取评论
-        IPage commentPage = commentService.paging(getPage(),null, id, "id");
+        IPage commentPage = commentService.paging(getPage(), null, id, "id");
         req.setAttribute("post", postVo);
         req.setAttribute("pageData", commentPage);
         return "post/view";
@@ -132,12 +144,17 @@ public class PostController extends BaseController {
         return Result.succ(null);
     }
 
-    @PostMapping("/submit")
+    /**
+     * 发布新帖
+     * @param post
+     * @param bindingResult
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PostMapping("/publish")
     @Transactional
     @ResponseBody
     public Result submit(@Valid Post post, BindingResult bindingResult) throws JsonProcessingException {
-        // 获取当前shiro中的用户
-        AccountProfile suser = getProfile();
         // bindingResult.hasErrors()是判断提交的post是否符合验证逻辑的
         if (bindingResult.hasErrors()) {
             return Result.fail(bindingResult.getFieldError().getDefaultMessage());
@@ -161,6 +178,7 @@ public class PostController extends BaseController {
             type = PostMqIndexMessage.UPDATE;
         }
         postService.saveOrUpdate(post);
+//        postService.setRedisPostRank(post);
         // 发送异步消息更新ES
         amqpTemplate.convertAndSend(RabbitMqConfig.ES_EXCHANGE, RabbitMqConfig.ES_BIND_KEY,
                 objectMapper.writeValueAsString(new PostMqIndexMessage(post.getId(), type)));
