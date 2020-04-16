@@ -8,6 +8,7 @@ import com.example.service.SearchService;
 import com.example.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,23 +62,27 @@ public class AdminController extends BaseController {
      * @return
      */
     @ResponseBody
-    @PostMapping("/jie-set")
+    @Transactional
+    @PostMapping("/set")
     public Result jieSet(Long id, Integer rank, String field) {
 
         Post post = postService.getById(id);
         Assert.isTrue(post != null, "该文章已被删除");
 
-        if("delete".equals(field)) {
+        if ("delete".equals(field)) {
             postService.removeById(id);
-            return Result.succ(null);
+            // 删除缓存分页文章
+            postService.deletePagingCache();
+            return Result.succ("删除成功", null, "/index");
 
-        } else if("stick".equals(field)) {
+        } else if ("stick".equals(field)) {
             post.setLevel(rank);
-        } else if("status".equals(field)) {
+        } else if ("status".equals(field)) {
             post.setRecommend(rank == 1);
         }
         postService.updateById(post);
-
+        // 删除缓存分页文章
+        postService.deletePagingCache();
         return Result.succ(null);
     }
 }

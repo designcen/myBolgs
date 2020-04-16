@@ -14,6 +14,7 @@ import cn.hutool.core.date.DateUnit;
 import com.example.utils.RedisUtils;
 import com.example.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +76,8 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
      * @return
      */
     @Override
-    @Cacheable(cacheNames = "cache_post", key = "'page_' + #page.current + '_' + #page.size " + "+ '_query_' + #categoryId + '_' + #recommend  + '_' + #order")
+    @Cacheable(cacheNames = "cache_post",
+            key = "'page_' + #page.current + '_' + #page.size + '_query_' + #categoryId + '_' + #level + '_' + #userId + '_' + #recommend  + '_' + #order")
     public IPage<PostVo> paging(Page page, Long userId, Long categoryId, Integer level, Boolean recommend, String order) {
         if (level == null) level = -1;
         QueryWrapper wrapper = new QueryWrapper<Post>()
@@ -138,14 +140,10 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         return getViewCount(post.getId());
     }
 
-    /**
-     * 设置redis的post顺序
-     * @param post
-     */
-    @Override
-    public void setRedisPostRank(Post post) {
 
-    }
+    @Override
+    @CacheEvict(cacheNames = "cache_post",allEntries = true)
+    public void deletePagingCache() {}
 
     /**
      * hash结构缓存文章标题和id

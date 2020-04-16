@@ -84,6 +84,8 @@ public class PostController extends BaseController {
         Assert.notNull(post, "该帖子已被删除");
         Assert.isTrue(post.getUserId() == getProfileId(), "无权限删除此文章！");
         postService.removeById(id);
+        // 删除分页缓存
+        postService.deletePagingCache();
         // 删除相关消息
         userMessageService.removeByMap(MapUtil.of("post_id", id));
         // 删除收藏
@@ -93,15 +95,15 @@ public class PostController extends BaseController {
         //发送异步消息更新ES
         amqpTemplate.convertAndSend(RabbitMqConfig.ES_EXCHANGE, RabbitMqConfig.ES_BIND_KEY,
                 objectMapper.writeValueAsString(new PostMqIndexMessage(post.getId(), PostMqIndexMessage.REMOVE)));
-        return Result.succ("删除成功", null, "/center");
+        return Result.succ("删除成功", null, "/index");
     }
 
     @GetMapping("/edit")
     public String edit() {
-        String id = req.getParameter("id");
+        String postId = req.getParameter("id");
         Post post = new Post();
-        if (!StringUtils.isEmpty(id)) {
-            post = postService.getById(Long.valueOf(id));
+        if (!StringUtils.isEmpty(postId)) {
+            post = postService.getById(Long.valueOf(postId));
             Assert.notNull(post, "文章已被删除！");
             Long profileId = getProfileId();
             Assert.isTrue(post.getUserId() == getProfileId(), "无权限编辑此文章！");
@@ -112,36 +114,6 @@ public class PostController extends BaseController {
         req.setAttribute("categories", categories);
         return "post/edit";
 
-    }
-
-    /**
-     * 编辑文章（帖子）
-     * @param id
-     * @return
-     */
-    @PostMapping("/getDa")
-    @ResponseBody
-    public Result getDa(Long id) {
-        Assert.isNull(id, "该文章不存在！");
-        Post post = postService.getById(id);
-        Assert.notNull(post, "文章已被删除！");
-        return Result.succ(null,post,"post/edit");
-    }
-
-    /**
-     * 更新文章（帖子）
-     * @param id
-     * @return
-     */
-    @PostMapping("/updateDa")
-    @ResponseBody
-    public Result updateDa(Long id,String content) {
-        Assert.isNull(id, "文章id不能为空");
-        Post post = postService.getById(id);
-        Assert.notNull(post, "文章已被删除！");
-        Assert.isTrue(post.getUserId() == getProfileId(), "无权限编辑此文章！");
-        postService.updateById(post);
-        return Result.succ(null);
     }
 
     /**
@@ -178,7 +150,8 @@ public class PostController extends BaseController {
             type = PostMqIndexMessage.UPDATE;
         }
         postService.saveOrUpdate(post);
-//        postService.setRedisPostRank(post);
+        // 删除缓存的分页文章
+        postService.deletePagingCache();
         // 发送异步消息更新ES
         amqpTemplate.convertAndSend(RabbitMqConfig.ES_EXCHANGE, RabbitMqConfig.ES_BIND_KEY,
                 objectMapper.writeValueAsString(new PostMqIndexMessage(post.getId(), type)));

@@ -22,7 +22,9 @@
                                 <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
                             </#if>
                             <@shiro.hasRole name="admin">
-                                <span class="layui-btn layui-btn-xs jie-admin" type="set" field="delete" rank="1">删除</span>
+                                <#if post.userId != profile.id>
+                                    <span class="layui-btn layui-btn-xs jie-admin" type="set" field="delete" rank="1">删除</span>
+                                </#if>
                                 <#if post.level == 0>
                                     <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1">置顶</span>
                                 </#if>
@@ -59,8 +61,7 @@
                         <span style="padding-right: 10px; color: #FF7200">悬赏：60飞吻</span>
                         <#if post.userId == profile.id>
                             <span class="layui-btn layui-btn-xs jie-admin" type="edit">
-                                <#--<a href="${base}/post/edit?id=${post.id}">编辑此贴</a>-->
-                                编辑此贴
+                                <a href="${base}/post/edit?id=${post.id}">编辑此贴</a>
                             </span>
                         </#if>
                     </div>
@@ -114,8 +115,13 @@
                             <i class="iconfont icon-svgmoban53"></i> 回复
                           </span>
                                 <div class="jieda-admin">
-                                <#if comment.userId == profile.id><span type="del">删除</span></#if>
-                                    <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                                <#if comment.userId == profile.id>
+                                    <span type="edit">编辑</span>
+                                    <span type="del">删除</span>
+                                </#if>
+                                    <#if post.userId == profile.id>
+                                        <span class="jieda-accept" type="accept">采纳</span>
+                                    </#if>
                                 </div>
                             </div>
                         </li>

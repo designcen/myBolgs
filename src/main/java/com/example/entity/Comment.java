@@ -54,6 +54,10 @@ public class Comment extends BaseEntity {
      * 置顶等级
      */
     private Integer level;
+    /**
+     * 评论状态（0：未被采纳，1：已被采纳）
+     */
+    private Integer status;
 
 
 }

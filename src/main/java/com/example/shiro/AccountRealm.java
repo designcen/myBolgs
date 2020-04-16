@@ -3,6 +3,7 @@ package com.example.shiro;
 import com.example.service.UserService;
 import com.example.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -44,6 +45,8 @@ public class AccountRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         // 注意token.getUsername()是指email
         AccountProfile profile = userService.login(token.getUsername(),String.valueOf(token.getPassword()));
+        // 将用户信息放到session可供页面获取（注意脱敏）
+        SecurityUtils.getSubject().getSession().setAttribute("profile", profile);
         log.info("======================================>进入认证步骤");
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(profile,token.getCredentials(),this.getName());
         return info;

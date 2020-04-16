@@ -27,7 +27,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private CommentMapper commentMapper;
     @Override
-    @Cacheable(cacheNames = "cache_comment", key = "'page_'+#page.current+'_'+#page.size+'_query_'+#postId+'_'+#order")
+    @Cacheable(cacheNames = "cache_comment", key = "'page_' + #page.current + '_' + #page.size + '_query_' + #userId + '_'+ #postId + '_' + #order")
     public IPage paging(Page page, Long userId, Long postId, String order) {
         QueryWrapper wrapper = new QueryWrapper<Comment>()
                 .eq(userId != null, "c.user_id", userId)
@@ -42,10 +42,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    // 一次删除两个缓存，包括登陆的和没登陆的
     @CacheEvict(cacheNames = "cache_comment", key = "'page_'+#totalPage+'_'+#limit+'_query_'+#comment.postId+'_'+#order")
     public void saveAndUpdate(int totalPage, int limit, Comment comment, String order) {
-        commentMapper.saveAndUpdate(comment);
     }
 
 }

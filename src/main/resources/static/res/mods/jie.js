@@ -92,15 +92,15 @@ layui.define(['layer','fly','form'], function(exports){
   });
 
   gather.jieAdmin = {
-    //删求解
+    //删文章，作者用
     del: function(div){
-      layer.confirm('确认删除该求解么？', function(index){
+      layer.confirm('确认删除该帖子么？', function(index){
         layer.close(index);
-        fly.json('/api/jie-delete/', {
+        fly.json('/post/delete/', {
           id: div.data('id')
         }, function(res){
           if(res.status === 0){
-            location.href = '/jie/';
+            location.href = res.action;
           } else {
             layer.msg(res.msg);
           }
@@ -108,21 +108,39 @@ layui.define(['layer','fly','form'], function(exports){
       });
     }
 
-    //设置置顶、状态
+    // 管理员 设置置顶、状态
     ,set: function(div){
       var othis = $(this);
-      fly.json('/admin/jie-set/', {
-        id: div.data('id')
-        ,rank: othis.attr('rank')
-        ,field: othis.attr('field')
-      }, function(res){
-        if(res.status === 0){
-          location.reload();
-        }
-      });
+      // 删除文章，管理员用
+      if (othis.attr('field') == 'delete') {
+          layer.confirm('确认删除该帖子么？', function(index){
+              layer.close(index);
+              fly.json('/admin/set/', {
+                  id: div.data('id')
+                  ,rank: othis.attr('rank')
+                  ,field: othis.attr('field')
+              }, function(res){
+                  if(res.status === 0){
+                      location.href = res.action;
+                    /*layer.msg(res.msg)
+                      location.reload();*/
+                  }
+              });
+          });
+      }else{
+        fly.json('/admin/set/', {
+          id: div.data('id')
+          ,rank: othis.attr('rank')
+          ,field: othis.attr('field')
+        }, function(res){
+          if(res.status === 0){
+            location.reload();
+          }
+        });
+      }
     }
 
-    //收藏 √
+    // 收藏 √
     ,collect: function(div){
       var othis = $(this), type = othis.data('type');
       fly.json('/collection/'+ type +'/', {
@@ -174,7 +192,7 @@ layui.define(['layer','fly','form'], function(exports){
       var othis = $(this);
       layer.confirm('是否采纳该回答为最佳答案？', function(index){
         layer.close(index);
-        fly.json('/api/jieda-accept/', {
+        fly.json('/comment/jieda-accept/', {
           id: li.data('id')
         }, function(res){
           if(res.status === 0){
@@ -187,8 +205,8 @@ layui.define(['layer','fly','form'], function(exports){
         });
       });
     }
-    ,edit: function(li){ // 编辑！
-      fly.json('/post/getDa/', {
+    ,edit: function(li){ // 编辑
+      fly.json('/comment/getDa/', {
         id: li.data('id')
       }, function(res){
           if (res.status === 0) {
@@ -205,7 +223,7 @@ layui.define(['layer','fly','form'], function(exports){
                       });
                   }
               }, function (value, index) {
-                  fly.json('/post/updateDa/', {
+                  fly.json('/comment/updateDa/', {
                       id: li.data('id')
                       , content: value
                   }, function (res) {

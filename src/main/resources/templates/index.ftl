@@ -3,6 +3,21 @@
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
+
+            <!--置顶-->
+            <div class="fly-panel">
+                <div class="fly-panel-title fly-filter">
+                    <a>置顶</a>
+                </div>
+                <@posts pn=1 size=5>
+                    <ul class="fly-list">
+                        <#list results.records as post>
+                            <@listing post></@listing>
+                        </#list>
+                    </ul>
+                </@posts>
+            </div>
+
             <!-- 内容-->
             <div class="fly-panel" style="margin-bottom: 0;">
                 <!-- 文章分类导航栏 -->
@@ -12,11 +27,11 @@
                     <a href="">精华</a>
                     <span class="fly-mid"></span>
                     <a href="">置顶</a>
-                    <span class="fly-filter-right layui-hide-xs">
+                    <#--<span class="fly-filter-right layui-hide-xs">
                         <a href="" class="layui-this">按最新</a>
                         <span class="fly-mid"></span>
                         <a href="">按热议</a>
-                    </span>
+                    </span>-->
                 </div>
             <#-- 文章信息，标题，阅读量等 -->
                 <ul class="fly-list">

@@ -21,5 +21,4 @@ public interface CommentMapper extends BaseMapper<Comment> {
 
     IPage<CommentVo> selectComments(Page page, @Param(Constants.WRAPPER) QueryWrapper<Comment> wrapper);
 
-    void saveAndUpdate(Comment comment);
 }

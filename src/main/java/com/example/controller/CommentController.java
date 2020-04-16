@@ -85,7 +85,9 @@ public class CommentController extends BaseController {
         // 2.在总评论数不为0的情况下再判断一共有几页
         int totalPage = count == 0 ? 1 : (count % limit == 0 ? count / limit : (count / limit) +1);
         // 保存评论并更新缓存
-        commentService.saveAndUpdate(totalPage,limit,comment,"id");
+        commentService.saveOrUpdate(comment);
+        // 删除评论
+//        commentService.saveOrUpdate(totalPage,limit,comment,"id");
         // 评论数量加一
         post.setCommentCount(post.getCommentCount() + 1);
         postService.saveOrUpdate(post);
@@ -127,5 +129,50 @@ public class CommentController extends BaseController {
             }
         }
         return Result.succ("评论成功", null, "/post/" + pid);
+    }
+
+    /**
+     * 编辑文章（帖子）
+     * @param id 评论id
+     * @return
+     */
+    @PostMapping("/getDa")
+    @ResponseBody
+    public Result getDa(Long id) {
+        Assert.notNull(id, "该评论不存在！");
+        Comment comment = commentService.getById(id);
+        Assert.notNull(comment, "评论已被删除！");
+        return Result.succ(null,comment);
+    }
+
+    /**
+     * 更新评论
+     * @param id 评论id
+     * @param content 评论内容
+     * @return
+     */
+    @PostMapping("/updateDa")
+    @ResponseBody
+    public Result updateDa(Long id,String content) {
+        Assert.notNull(id, "评论id不能为空");
+        Comment comment = commentService.getById(id);
+        comment.setContent(content);
+        commentService.updateById(comment);
+        return Result.succ(null);
+    }
+
+    /**
+     * 评论被采纳
+     * @param id 评论id
+     * @return
+     */
+    @PostMapping("/jieda-accept/")
+    @ResponseBody
+    public Result accept(Long id) {
+        Assert.notNull(id, "评论id不能为空");
+        Comment comment = commentService.getById(id);
+        comment.setStatus(1);
+        commentService.updateById(comment);
+        return Result.succ(null);
     }
 }

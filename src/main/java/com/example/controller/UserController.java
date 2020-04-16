@@ -79,7 +79,7 @@ public class UserController extends BaseController {
         // 获取当前shiro中的用户
         AccountProfile suser = getProfile();
         // 分页获取当前用户的所有文章
-        IPage<PostVo> postAll = postService.paging(getPage(), suser.getId(), null, suser.getVipLevel(), null, "created");
+        IPage<PostVo> postAll = postService.paging(getPage(), suser.getId(), null, null, null, "created");
         // 由于浏览数是先存入到redis然后定时存入mysql的，所以这里需要取redis获取浏览数获取最新数据
         for (PostVo p  : postAll.getRecords()) {
           p.setViewCount(postService.getViewCount(p));

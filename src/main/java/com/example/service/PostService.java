@@ -39,5 +39,5 @@ public interface PostService extends IService<Post> {
      */
     Integer getViewCount(Post post);
 
-    void setRedisPostRank(Post post);
+    void deletePagingCache();
 }

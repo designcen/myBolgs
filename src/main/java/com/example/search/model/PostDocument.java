@@ -20,35 +20,32 @@ public class PostDocument implements Serializable {
     private Long id;
 
     // 中文分词器 -> https://github.com/medcl/elasticsearch-analysis-ik
-    @Field(type = FieldType.Text)
+//    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
 
 //    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
-//    private String content;
-
-    @Field(type = FieldType.Text)
-    private String description;
+    private String content;
 
     private Long authorId;
-    @Field(type = FieldType.Text)
+//    @Field(type = FieldType.Keyword)
     private String authorName;
     private String authorVip;
     private String authorAvatar;
 
     private Long categoryId;
-    @Field(type = FieldType.Text)
+//    @Field(type = FieldType.Keyword)
     private String categoryName;
 
     private Boolean recommend;
     private Integer level;
 
-    @Field(type = FieldType.Text)
+//    @Field(type = FieldType.Text)
     private String tags;
 
     private Integer commentCount;
     private Integer viewCount;
 
-    @Field(type = FieldType.Text)
+//    @Field(type = FieldType.Date)
     private Date created;
 
 }
