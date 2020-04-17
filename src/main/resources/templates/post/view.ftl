@@ -99,8 +99,9 @@
                                 <div class="detail-hits">
                                     <span>${comment.created?string('yyyy-MM-dd HH:mm:ss')}</span>
                                 </div>
-
-                            <#--<i class="iconfont icon-caina" title="最佳答案"></i>-->
+                                <#if comment.status == 1>
+                                    <i class="iconfont icon-caina" title="最佳答案"></i>
+                                </#if>
                             </div>
                             <div class="detail-body jieda-body photos">
                                 ${comment.content!}
@@ -122,6 +123,9 @@
                                     <#if post.userId == profile.id>
                                         <span class="jieda-accept" type="accept">采纳</span>
                                     </#if>
+                                    <@shiro.hasRole name="admin">
+                                        <span type="del">删除</span>
+                                    </@shiro.hasRole>
                                 </div>
                             </div>
                         </li>
@@ -144,8 +148,6 @@
                         </div>
                         <div class="layui-form-item">
                             <input type="hidden" name="pid" value="${post.id}">
-                            <input type="hidden" name="count" value="${pageData.total}">
-                            <input type="hidden" name="limit" value="${pageData.size}">
                             <button class="layui-btn" lay-filter="*" lay-submit>提交回复</button>
                         </div>
                     </form>

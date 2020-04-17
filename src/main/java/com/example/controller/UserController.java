@@ -133,6 +133,13 @@ public class UserController extends BaseController {
         return "user/set";
     }
 
+    /**
+     * 修改密码
+     * @param oldPass
+     * @param newPass
+     * @param reNewPass
+     * @return
+     */
     @PostMapping("/repass")
     @ResponseBody
     public Result repass(String oldPass, String newPass, String reNewPass) {
@@ -171,25 +178,11 @@ public class UserController extends BaseController {
         return "user/message";
     }
 
-
-    @PostMapping("/jieda-zan/")
-    @ResponseBody
-    public Result praise(boolean ok, Long id) {
-        Comment comment = commentService.getById(id);
-        Assert.notNull(comment,"该评论不存在");
-        // 如果ok为true说明添加是点赞
-        if (ok) {
-            Integer voteUp = comment.getVoteUp() + 1;
-            comment.setVoteUp(voteUp);
-            commentService.updateById(comment);
-        } else {
-            Integer voteUp = comment.getVoteUp() - 1;
-            comment.setVoteUp(voteUp);
-            commentService.updateById(comment);
-        }
-        return Result.succ("操作成功", null);
-    }
-
+    /**
+     * 修改用户信息
+     * @param user  修改后的用户信息
+     * @return
+     */
     @ResponseBody
     @PostMapping("/modified")
     public Result modified(User user) {
@@ -224,8 +217,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @PostMapping("/upload/")
-    public Result upload(@RequestParam(value = "file") MultipartFile file,
-                         @RequestParam(name="type", defaultValue = "avatar") String type) {
+    public Result upload(@RequestParam(value = "file") MultipartFile file, @RequestParam(name="type", defaultValue = "avatar") String type) {
 
         if(file.isEmpty()) {return Result.fail("上传失败");}
 

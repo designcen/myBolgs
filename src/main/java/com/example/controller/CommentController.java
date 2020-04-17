@@ -2,20 +2,26 @@ package com.example.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.common.lang.Constant;
 import com.example.common.lang.Result;
 import com.example.entity.Comment;
 import com.example.entity.Post;
 import com.example.entity.User;
 import com.example.entity.UserMessage;
+import com.example.utils.CommonUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 评论操作
@@ -31,7 +37,7 @@ public class CommentController extends BaseController {
      * @param id 评论id
      * @return
      */
-    @PostMapping("/jieda-delete/")
+    @PostMapping("/delete/")
     @Transactional
     @ResponseBody
     public Result reply(Long id){
@@ -42,6 +48,8 @@ public class CommentController extends BaseController {
             return Result.fail(("不是你发表的评论！"));
         }
         commentService.removeById(id);
+        // 删除评论分页缓存
+        commentService.deleteRedisCache();
         // 评论数量减一
         Post post = postService.getById(comment.getPostId());
         post.setCommentCount(post.getCommentCount() - 1);
@@ -57,8 +65,6 @@ public class CommentController extends BaseController {
     /**
      *  评论帖子
      * @param pid 帖子id
-     * @param count 总条数
-     * @param limit 每页条数
      * @param parentId 被回复评论的id
      * @param content  评论内容
      * @return
@@ -66,7 +72,7 @@ public class CommentController extends BaseController {
     @PostMapping("/reply/")
     @Transactional
     @ResponseBody
-    public Result reply(Long pid,int count,int limit, Long parentId, String content) {
+    public Result reply(Long pid, Long parentId, String content) {
         Assert.notNull(pid, "找不到对应文章！");
         Assert.hasLength(content, "评论内容不能为空！");
         Post post = postService.getById(pid);
@@ -81,16 +87,15 @@ public class CommentController extends BaseController {
         comment.setLevel(0);
         comment.setCreated(new Date());
         comment.setModified(new Date());
-        // 1.首先判断count（总评论数）是否为0，若为零，则totalPage（总页数为1）
-        // 2.在总评论数不为0的情况下再判断一共有几页
-        int totalPage = count == 0 ? 1 : (count % limit == 0 ? count / limit : (count / limit) +1);
         // 保存评论并更新缓存
         commentService.saveOrUpdate(comment);
-        // 删除评论
-//        commentService.saveOrUpdate(totalPage,limit,comment,"id");
+        // 删除评论分页缓存
+        commentService.deleteRedisCache();
         // 评论数量加一
         post.setCommentCount(post.getCommentCount() + 1);
         postService.saveOrUpdate(post);
+        // 删除文章分页缓存
+        postService.deletePagingCache();
         // 更新首页排版评论数量
         postService.incrZsetValueAndUnionForLastWeekRank(comment.getPostId(), true);
         // 自己评论自己不需要通知
@@ -158,6 +163,8 @@ public class CommentController extends BaseController {
         Comment comment = commentService.getById(id);
         comment.setContent(content);
         commentService.updateById(comment);
+        // 删除评论分页缓存
+        commentService.deleteRedisCache();
         return Result.succ(null);
     }
 
@@ -166,13 +173,52 @@ public class CommentController extends BaseController {
      * @param id 评论id
      * @return
      */
-    @PostMapping("/jieda-accept/")
+    @PostMapping("/accept/")
     @ResponseBody
     public Result accept(Long id) {
         Assert.notNull(id, "评论id不能为空");
         Comment comment = commentService.getById(id);
         comment.setStatus(1);
         commentService.updateById(comment);
+        // 删除评论分页缓存
+        commentService.deleteRedisCache();
         return Result.succ(null);
+    }
+
+    /**
+     * 点赞
+     * @param id 评论id
+     * @return
+     */
+    @PostMapping("/zan/")
+    @ResponseBody
+    public Result praise( Long id) {
+        // 是否点过赞
+        Map<String, Boolean> isVoteUp = new HashMap<>();
+        // 获取点赞的cookie 键：VOTE_COOKIE + 文章id + _ + 作者id
+        String name = Constant.VOTE_COOKIE + id + "_" + getProfileId();
+        Comment comment = commentService.getById(id);
+        Assert.notNull(comment, "该评论不存在");
+        Integer voteUp = comment.getVoteUp();
+        // 获取cookie
+        Cookie cookie = CommonUtils.getCookie(req, name);
+        // 如果存在cookie并且值不为空，说明已经点赞过了，此时要设置值为空为了下一次判断
+        if (cookie != null && !StringUtils.isEmpty(cookie.getValue())) {
+            --voteUp;
+            // 设置cookie值
+            CommonUtils.addCookie(resp, name, null, "/", 60 * 60 * 24,cookie);
+            isVoteUp.put("isVoteUp", true);
+        } else {
+            ++voteUp;
+            // 添加cookie
+            CommonUtils.addCookie(resp, name, "true", "/", 60 * 60 * 24,cookie);
+            isVoteUp.put("isVoteUp", false);
+        }
+        comment.setVoteUp(voteUp);
+        commentService.updateById(comment);
+        // 删除评论分页缓存
+        commentService.deleteRedisCache();
+        return Result.succ("操作成功", isVoteUp);
+
     }
 }

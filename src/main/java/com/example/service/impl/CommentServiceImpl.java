@@ -31,19 +31,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public IPage paging(Page page, Long userId, Long postId, String order) {
         QueryWrapper wrapper = new QueryWrapper<Comment>()
                 .eq(userId != null, "c.user_id", userId)
-                .eq(postId != null, "c.post_id", postId);
+                .eq(postId != null, "c.post_id", postId)
+                .orderByDesc(order);
         IPage<CommentVo> pageData = commentMapper.selectComments(page, wrapper);
         return pageData;
     }
 
     @Override
-    public IPage<CommentVo> getLateComment(Page page, QueryWrapper<Comment> queryWrapper) {
-        return commentMapper.selectComments(page, queryWrapper);
-    }
+    public IPage<CommentVo> getLateComment(Page page, QueryWrapper<Comment> queryWrapper) { return commentMapper.selectComments(page, queryWrapper); }
 
     @Override
-    @CacheEvict(cacheNames = "cache_comment", key = "'page_'+#totalPage+'_'+#limit+'_query_'+#comment.postId+'_'+#order")
-    public void saveAndUpdate(int totalPage, int limit, Comment comment, String order) {
-    }
+    @CacheEvict(cacheNames = "cache_comment",allEntries = true)
+    public void deleteRedisCache() {}
 
 }

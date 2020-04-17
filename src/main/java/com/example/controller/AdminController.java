@@ -55,10 +55,10 @@ public class AdminController extends BaseController {
     }
 
     /**
-     * 设置置顶、状态
+     * 设置文章是否置顶、是否加精、删除
      * @param id 文章id
-     * @param rank 等级
-     * @param field 操作内容
+     * @param rank
+     * @param field 操作内容（置顶、加精、删除）
      * @return
      */
     @ResponseBody

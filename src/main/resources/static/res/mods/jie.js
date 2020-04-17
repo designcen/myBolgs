@@ -164,22 +164,22 @@ layui.define(['layer','fly','form'], function(exports){
   });
 
   gather.jiedaActive = {
-    zan: function(li){ // 点赞，每刷新一次页面，页面重新加载一次的话就可以重新点赞一次√
-      var othis = $(this), ok = othis.hasClass('zanok');
-      fly.json('/user/jieda-zan/', {
-        ok: ok
-        ,id: li.data('id')
+    zan: function(li){ // 点赞
+      var othis = $(this);
+      fly.json('/comment/zan/', {
+        id: li.data('id')
       }, function(res){
         if(res.status === 0){
-          var zans = othis.find('em').html()|0;
-          othis[ok ? 'removeClass' : 'addClass']('zanok');
-          othis.find('em').html(!ok ? (--zans) : (++zans));
+            var ok = !res.data.isVoteUp;
+            var zans = othis.find('em').html()|0;
+            othis[ok ? 'removeClass' : 'addClass']('zanok');
+            othis.find('em').html(!ok ? (--zans) : (++zans));
         } else {
           layer.msg(res.msg);
         }
       });
     }
-    ,reply: function(li){ // 回复 √
+    ,reply: function(li){ // 回复
       var val = dom.content.val();
       var aite = '@'+ li.find('.fly-detail-user cite').text().replace(/\s/g, '');
       var parentId = li.find('.fly-detail-user input').val().replace(/\s/g, '');
@@ -188,11 +188,11 @@ layui.define(['layer','fly','form'], function(exports){
       dom.content.val(aite +' ' + val);
       dom.content.parent().find("input[name='parentId']").val(parentId);
     }
-    ,accept: function(li){ // 采纳 ！
+    ,accept: function(li){ // 采纳
       var othis = $(this);
       layer.confirm('是否采纳该回答为最佳答案？', function(index){
         layer.close(index);
-        fly.json('/comment/jieda-accept/', {
+        fly.json('/comment/accept/', {
           id: li.data('id')
         }, function(res){
           if(res.status === 0){
@@ -237,7 +237,7 @@ layui.define(['layer','fly','form'], function(exports){
     ,del: function(li){ // 删除
       layer.confirm('确认删除该回答么？', function(index){
         layer.close(index);
-        fly.json('/comment/jieda-delete/', {
+        fly.json('/comment/delete/', {
           id: li.data('id')
         }, function(res){
           if(res.status === 0){

@@ -48,10 +48,18 @@ public class CommonUtils {
      *                 如果设置路径，这个路径即该工程下都可以访问该cookie。
      *                 不设置路径,在访问子路径时，会包含其父路径的Cookie，而在访问父路径时，不包含子路径的Cookie。
      * @return
-     * @maxAge cookie的生命周期  以秒为单位
+     * @maxAge 生命周期（秒） 1.当expiry大于0时（一般设置为1），浏览器不仅会把cookie保存在浏览器内存中，还会把cookie保存到硬盘上，
+     * 例：cookie.setMaxAge(60*60)，表示cookie将存活一个小时，无论是否重启浏览器、或是系统。
+     * 2.expiry < 0：当expiry小于0时（一般设置为-1），表示只在浏览器内存中存活。一旦关闭浏览器窗口，那么cookie就会消失。
+     * 3.expiry = 0：当expiry等于0时，表示cookie即不在内存中存活，也不在硬盘上存活，这样的cookie设置只有一个目的，
+     * 那就是覆盖客户端原来的这个cookie，使其作废。
      */
-    public static void addcookie(HttpServletResponse response, String name, String value, String path, int maxAge) {
-        Cookie cookie = new Cookie(name, value);
+    public static void addCookie(HttpServletResponse response, String name, String value, String path, int maxAge, Cookie cookie) {
+        if (cookie == null) {
+            cookie = new Cookie(name, value);
+        }else{
+            cookie.setValue(value);
+        }
         if (StringUtils.isEmpty(path)) {
             cookie.setPath("/");
         } else {

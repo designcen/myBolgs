@@ -23,6 +23,8 @@ public class Constant {
 
     // 评论cookie的键
     public final static String COMMENT_COOKIE = "comment_cookie";
+    // 点赞cookie的键
+    public final static String VOTE_COOKIE = "vote_cookie";
 
     public final static String IM_GROUP_NAME = "homework-group-study";
 

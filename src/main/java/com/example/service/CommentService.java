@@ -29,5 +29,5 @@ public interface CommentService extends IService<Comment> {
 
     IPage<CommentVo> getLateComment(Page page,QueryWrapper<Comment> queryWrapper);
 
-    void saveAndUpdate(int totalPage,int limit, Comment comment,String order);
+    void deleteRedisCache();
 }

@@ -50,13 +50,13 @@ public class PostController extends BaseController {
         QueryWrapper wrapper = new QueryWrapper<Post>().eq(id != null, "p.id", id);
         PostVo postVo = postService.selectOne(wrapper);
         Assert.notNull(postVo, "文章已被删除！");
-        // 获取该请求的cookie,判断该请求是否读过该文章，若没有，则添加访问量，并且添加该文章的cookie
-        Cookie cookie = CommonUtils.getCookie(req, Constant.COMMENT_COOKIE + id);
+        // 获取该请求的cookie,判断该请求是否读过该文章，若没有，则添加访问量，并且添加该文章的cookie,键 COMMENT_COOKIE + 文章id + _ + 作者id
+        Cookie cookie = CommonUtils.getCookie(req, Constant.COMMENT_COOKIE + id + "_" + getProfileId());
         if (cookie == null) {
             // redis中访问量+1
             postService.setViewCount(postVo);
             // 添加含该文章标记的cookie
-            CommonUtils.addcookie(resp, Constant.COMMENT_COOKIE + id, "true", null, 0);
+            CommonUtils.addCookie(resp, Constant.COMMENT_COOKIE + id + "_" + getProfileId(), "true", "/", 60*60*24,cookie);
         }
         // 从redis中获取浏览数量
         int viewCount = postService.getViewCount(postVo);
@@ -64,7 +64,7 @@ public class PostController extends BaseController {
             postVo.setViewCount(viewCount);
         }
         // 分页获取评论
-        IPage commentPage = commentService.paging(getPage(), null, id, "id");
+        IPage commentPage = commentService.paging(getPage(),null, id, "created");
         req.setAttribute("post", postVo);
         req.setAttribute("pageData", commentPage);
         return "post/view";
