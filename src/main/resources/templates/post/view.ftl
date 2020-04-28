@@ -116,14 +116,16 @@
                             <i class="iconfont icon-svgmoban53"></i> 回复
                           </span>
                                 <div class="jieda-admin">
-                                <#if comment.userId == profile.id>
-                                    <span type="edit">编辑</span>
+                                <#if comment.userId == profile.id >
+                                    <#if comment.status == 0>
+                                        <span type="edit">编辑</span>
+                                    </#if>
                                     <span type="del">删除</span>
                                 </#if>
-                                    <#if post.userId == profile.id>
+                                    <#if post.userId == profile.id && comment.status == 0>
                                         <span class="jieda-accept" type="accept">采纳</span>
                                     </#if>
-                                    <@shiro.hasRole name="admin">
+                                    <@shiro.hasRole name="admin" && comment.userId != profile.id>
                                         <span type="del">删除</span>
                                     </@shiro.hasRole>
                                 </div>

@@ -21,6 +21,7 @@ import org.tio.websocket.common.WsResponse;
 
 import java.util.Date;
 /**
+ * 消息发送处理
  * @author cenkang
  * @date 2020/2/29 - 20:33
  */
@@ -53,7 +54,7 @@ public class ChatMsgHandler implements MsgHandler {
 
         //用tio-websocket，服务器发送到客户端的Packet都是WsResponse
         WsResponse wsResponse = WsResponse.fromText(responseData, "utf-8");
-
+        // 过滤自己发送给自己，因为在layui框架中已经将消息发送给自己一遍了
         ChannelContextFilter filter = new ChannelContextFilterImpl();
         ((ChannelContextFilterImpl) filter).setCurrentContext(channelContext);
 

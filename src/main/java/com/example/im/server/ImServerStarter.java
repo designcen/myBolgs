@@ -7,6 +7,7 @@ import org.tio.websocket.server.WsServerStarter;
 import java.io.IOException;
 
 /**
+ * 启动websocket
  * @author cenkang
  * @date 2020/2/29 - 20:33
  */
@@ -17,7 +18,7 @@ public class ImServerStarter {
     private WsServerStarter wsServerStarter ;
     private ServerGroupContext serverGroupContext;
     public ImServerStarter(int imPort) throws IOException {
-
+        // 初始化websocket处理
         imWsMsgHandler = new ImWsMsgHandler();
         wsServerStarter = new WsServerStarter(imPort, imWsMsgHandler);
 

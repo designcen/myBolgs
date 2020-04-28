@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import java.io.IOException;
 
 /**
+ * 初始化聊天配置
  * @author cenkang
  * @date 2020/2/29 - 20:27
  */
@@ -29,10 +30,10 @@ public class ImServerAutoConfig {
             ImServerStarter imServerStarter = new ImServerStarter(imPort);
             imServerStarter.start();
 
-            //初始化消息处理器工程
+            // 初始化消息处理器工程
             MsgHandlerFactory.init();
 
-            log.info("---------> im server started !");
+            log.info("---------> 群聊服务已启动!");
             return imServerStarter;
 
         } catch (IOException e) {

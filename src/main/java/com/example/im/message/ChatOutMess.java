@@ -12,8 +12,10 @@ import java.io.Serializable;
 @Data
 public class ChatOutMess implements Serializable {
 
+    // 消息类型
     private String emit;
 
+    // 消息内容
     private Object mess;
 
     public ChatOutMess(){}

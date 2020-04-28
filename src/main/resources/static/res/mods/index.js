@@ -72,7 +72,6 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
           if(res.status === 0) {
             success && success(res);
           } else {
-            debugger;
             layer.msg(res.msg || res.code, {shift: 6});
             options.error && options.error();
           }

@@ -20,6 +20,7 @@ import org.tio.websocket.server.handler.IWsMsgHandler;
 
 import java.util.Map;
 /**
+ * websocket处理类
  * @author cenkang
  * @date 2020/2/29 - 20:33
  */
@@ -29,6 +30,9 @@ public class ImWsMsgHandler implements IWsMsgHandler {
 
     /**
      * 握手时走这个方法 {@link WsServerAioHandler#handler }
+     * 对httpResponse参数进行补充并返回，如果返回null表示不想和对方建立连接，框架会断开连接，如果返回非null，框架会把这个对象发送给对方
+     * 注：请不要在这个方法中向对方发送任何消息，因为这个时候握手还没完成，发消息会导致协议交互失败。
+     * 对于大部分业务，该方法只需要一行代码：return httpResponse;
      * @param httpRequest
      * @param httpResponse
      * @param channelContext
@@ -41,17 +45,17 @@ public class ImWsMsgHandler implements IWsMsgHandler {
         String username = httpRequest.getParam("username");
         String userId = httpRequest.getParam("userId");
 
-        //绑定用户信息
+        // 绑定用户信息
         Tio.bindUser(channelContext, userId);
 
-        log.info("{} - {} ------------> 握手啦握手啦", username, userId);
+        log.info("{} - {} ------------> 握手", username, userId);
         return httpResponse;
     }
 
     /**
      * 握手成功之后操作
-     * 1、通知上线
-     * 2、
+     * 握手成功后触发该方法
+     * 1、群通知上线
      * @param httpRequest
      * @param httpResponse
      * @param channelContext
@@ -59,26 +63,26 @@ public class ImWsMsgHandler implements IWsMsgHandler {
      */
     @Override
     public void onAfterHandshaked(HttpRequest httpRequest, HttpResponse httpResponse, ChannelContext channelContext) throws Exception {
-        //绑定到群组，后面会有群发
+        // 绑定到群组，后面会有群发
         Tio.bindGroup(channelContext, Constant.IM_GROUP_NAME);
 
-        //群聊人数
+        // 群聊人数
         int count = Tio.getAllChannelContexts(channelContext.groupContext).getObj().size();
 
         ChatService chatService = (ChatService) SpringUtil.getBean("chatService");
-        String mess = chatService.buildSystemMess(Constant.IM_DEFAULT_GROUP_ID, channelContext.userid + "上线了");
+        // 拼接群发内容
+        String mess = chatService.buildSystemMess(Long.valueOf(channelContext.getGroupContext().getId()), channelContext.userid + "上线了");
 
         //用tio-websocket，服务器发送到客户端的Packet都是WsResponse
         WsResponse wsResponse = WsResponse.fromText(mess, "utf-8");
         //群发
         Tio.sendToGroup(channelContext.groupContext, Constant.IM_GROUP_NAME, wsResponse);
-
         // 添加成员
         chatService.putOnlineMember(httpRequest);
     }
 
     /**
-     * 节消息（binaryType = arraybuffer）过来后会走这个方法
+     * 节消息（binaryType = arraybuffer）如果你的ws是基于BINARY传输的，就会走到这个方法
      * @param wsRequest
      * @param bytes
      * @param channelContext
@@ -102,7 +106,7 @@ public class ImWsMsgHandler implements IWsMsgHandler {
     }
 
     /**
-     * 字符消息（binaryType = blob）过来后会走这个方法 {@link WsServerAioHandler#h}
+     * 字符消息（binaryType = blob）如果你的ws是基于TEXT传输的，就会走到这个方法 {@link WsServerAioHandler#h}
      * @param wsRequest
      * @param s
      * @param channelContext

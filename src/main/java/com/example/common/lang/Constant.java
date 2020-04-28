@@ -26,13 +26,21 @@ public class Constant {
     // 点赞cookie的键
     public final static String VOTE_COOKIE = "vote_cookie";
 
-    public final static String IM_GROUP_NAME = "homework-group-study";
+    // 群组名称
+    public final static String IM_GROUP_NAME = "whatever_group_name";
 
-    //消息类型
+    /*消息类型*/
+    // 心跳
     public final static String IM_MESS_TYPE_PING = "pingMessage";
+    // 聊天消息
     public final static String IM_MESS_TYPE_CHAT = "chatMessage";
-
+    // 在线人数键
     public static final String IM_ONLINE_MEMBERS_KEY = "online_members_key";
+
+    // 历史聊天数据键
     public static final String IM_GROUP_HISTROY_MSG_KEY = "group_histroy_msg_key";
+
+    // 默认灰头像
+    public static final String DEFAULT_GARY_AVATAR = "/res/images/default.jpg";
 
 }

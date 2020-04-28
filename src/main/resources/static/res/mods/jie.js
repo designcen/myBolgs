@@ -39,7 +39,6 @@ layui.define(['layer','fly','form'], function(exports){
 
   //提交回答 没用上
   /*fly.form['/comment/reply/'] = function(data, required){
-    debugger;
     var tpl = '<li>\
       <div class="detail-about detail-about-reply">\
         <a class="fly-avatar" href="/u/{{ layui.cache.user.uid }}" target="_blank">\
@@ -198,6 +197,8 @@ layui.define(['layer','fly','form'], function(exports){
           if(res.status === 0){
             $('.jieda-accept').remove();
             li.addClass('jieda-daan');
+            li.find("span[type='edit']").remove();
+            li.parent().find("span[type='accept']").remove();
             li.find('.detail-about').append('<i class="iconfont icon-caina" title="最佳答案"></i>');
           } else {
             layer.msg(res.msg);

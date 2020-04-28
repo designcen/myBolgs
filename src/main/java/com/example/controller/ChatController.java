@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 群聊信息控制
  * @author cenkang
  * @Date 2020/3/2 15:57
  */
@@ -27,17 +28,24 @@ import java.util.Set;
 @RequestMapping("/chat")
 public class ChatController extends BaseController{
 
+    /**
+     * 获取当前用户的和当前群数据
+     * @param request
+     * @return
+     */
     @GetMapping("/getMineAndGroupData")
     public Result getMineAndGroupData(HttpServletRequest request) {
 
-        //获取用户信息
+        // 获取用户信息
         ImUser user = chatService.getCurrentImUser();
 
-        //默认群
+        // 默认群
         Map<String, Object> group = new HashMap<>();
         group.put("name", "社区群聊");
         group.put("type", "group");
-        group.put("avatar", "http://tp1.sinaimg.cn/5619439268/180/40030060651/1");
+//        group.put("avatar", "http://tp1.sinaimg.cn/5619439268/180/40030060651/1");
+        group.put("avatar", Constant.DEFAULT_GARY_AVATAR);
+        // 群聊默认id
         group.put("id", Constant.IM_DEFAULT_GROUP_ID);
         group.put("members", 0);
 
@@ -47,6 +55,10 @@ public class ChatController extends BaseController{
                 .map());
     }
 
+    /**
+     * 获取所有在线群聊成员
+     * @return
+     */
     @RequestMapping("/getMembers")
     public Result getMembers() {
 
@@ -56,6 +68,10 @@ public class ChatController extends BaseController{
         return Result.succ(MapUtil.of("list", members));
     }
 
+    /**
+     * 获取聊天历史数据
+     * @return
+     */
     @GetMapping("/getGroupHistoryMsg")
     public Result getGroupHistoryMsg() {
 

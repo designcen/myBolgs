@@ -43,7 +43,7 @@ public class ChatServiceImpl implements ChatService {
             user.setMine(true);
             user.setStatus(ImUser.ONLINE_STATUS);
         } else {
-            user.setAvatar("http://tp1.sinaimg.cn/5619439268/180/40030060651/1");
+            user.setAvatar(Constant.DEFAULT_GARY_AVATAR);
 
             // 匿名用户处理
             Long imUserId = (Long) SecurityUtils.getSubject().getSession().getAttribute("imUserId");
