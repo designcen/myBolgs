@@ -10,6 +10,9 @@
                 <li lay-id="avatar">头像</li>
                 <li lay-id="pass">密码</li>
                 <li lay-id="bind">帐号绑定</li>
+                <@shiro.hasRole name="admin">
+                    <li lay-id="es_syn">同步es</li>
+                </@shiro.hasRole>
             </ul>
 
             <div class="layui-tab-content" style="padding: 20px 0;">

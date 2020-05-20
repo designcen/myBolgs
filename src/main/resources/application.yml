@@ -30,7 +30,7 @@ spring:
   data:
     elasticsearch:
       cluster-name: my-application
-      cluster-nodes: localhost:9300
+      cluster-nodes: cenkang:9300
       repositories:
         enabled: true
 mybatis-plus:

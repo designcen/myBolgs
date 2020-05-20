@@ -158,6 +158,10 @@ public class PostController extends BaseController {
         return Result.succ("发布成功", null, "/post/" + post.getId());
     }
 
+    /**
+     * 发表新帖跳转页面
+     * @return
+     */
     @GetMapping("/add")
     public String add(){
         List<Category> categories = categoryService.list();

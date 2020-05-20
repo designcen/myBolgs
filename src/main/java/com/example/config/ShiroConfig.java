@@ -83,6 +83,7 @@ public class ShiroConfig {
         // anon:不需要验证，auth：需要验证，roles[admin]：需要admin权限
         hashMap.put("/login", "anon");
         hashMap.put("/post/edit", "auth");
+        hashMap.put("/post/add", "auth");
         hashMap.put("/post/delete/", "auth");
         hashMap.put("/post/publish", "auth");
         hashMap.put("/comment/reply/", "auth");

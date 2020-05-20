@@ -125,8 +125,10 @@
                                     <#if post.userId == profile.id && comment.status == 0>
                                         <span class="jieda-accept" type="accept">采纳</span>
                                     </#if>
-                                    <@shiro.hasRole name="admin" && comment.userId != profile.id>
-                                        <span type="del">删除</span>
+                                    <@shiro.hasRole name="admin">
+                                        <#if comment.userId != profile.id>
+                                            <span type="del">删除</span>
+                                        </#if>
                                     </@shiro.hasRole>
                                 </div>
                             </div>
